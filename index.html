@@ -1,0 +1,2254 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  
+  <!-- iOS Uygulama Ayarları -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Debi & Kompresör">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b1120">
+
+  <title>Hacimsel Debi Dönüştürücü &amp; Atlas Copco Makine Kataloğu</title>
+  <style>
+    :root {
+      --bg-body: #0b1120;
+      --bg-header: rgba(11, 17, 32, 0.96);
+      --bg-card: #131c31;
+      --bg-card-hover: #18233d;
+      --bg-input: #070b14;
+      --bg-pill: #1e293b;
+      --border-subtle: #23314d;
+      --border-medium: #334155;
+      --border-accent: #0ea5e9;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-blue: #0099cc;
+      --accent-blue-hover: #0ea5e9;
+      --accent-sky: #38bdf8;
+      --accent-emerald: #10b981;
+      --accent-emerald-bg: rgba(16, 185, 129, 0.14);
+      --accent-emerald-border: rgba(16, 185, 129, 0.35);
+      --accent-amber: #f59e0b;
+      --accent-amber-bg: rgba(245, 158, 11, 0.14);
+      --accent-amber-border: rgba(245, 158, 11, 0.35);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        linear-gradient(to right, rgba(14, 165, 233, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(14, 165, 233, 0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+      display: flex;
+      flex-direction: column;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b1120;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #23314d;
+      border-radius: 4px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: var(--bg-header);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.65);
+      padding: 10px 0 14px 0;
+    }
+
+    .top-signature-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(35, 49, 77, 0.75);
+      gap: 10px;
+    }
+
+    .top-offline-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    .top-offline-pill span.dot-green {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+    }
+
+    .signature-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+      background-color: #131c31;
+      color: #cbd5e1;
+      border: 1px solid #2d3f63;
+      white-space: nowrap;
+    }
+
+    .signature-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--accent-sky);
+      box-shadow: 0 0 8px var(--accent-sky);
+    }
+
+    .signature-badge strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .header-main-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0099cc, #0284c7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      box-shadow: 0 6px 18px rgba(0, 153, 204, 0.3);
+      flex-shrink: 0;
+    }
+
+    .brand-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+
+    .unit-count-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background-color: rgba(14, 165, 233, 0.14);
+      color: var(--accent-sky);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 1px;
+    }
+
+    .mode-switcher {
+      display: inline-flex;
+      background-color: #070b14;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .mode-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 9px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .mode-tab-btn:hover {
+      color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .mode-tab-btn.active {
+      background: linear-gradient(135deg, #0099cc, #0284c7);
+      color: #ffffff;
+      border-color: rgba(125, 211, 252, 0.4);
+      box-shadow: 0 4px 12px rgba(0, 153, 204, 0.35);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn-emerald {
+      background-color: var(--accent-emerald-bg);
+      color: #34d399;
+      border-color: var(--accent-emerald-border);
+    }
+
+    .btn-primary {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 153, 204, 0.3);
+    }
+
+    .btn-secondary {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      border-color: #334155;
+    }
+
+    .btn-transfer {
+      background-color: rgba(14, 165, 233, 0.14);
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.35);
+      padding: 6px 11px;
+      font-size: 11px;
+    }
+
+    main {
+      flex: 1;
+      padding: 22px 0 52px 0;
+    }
+
+    .view-panel {
+      display: none;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .view-panel.active {
+      display: flex;
+    }
+
+    .control-panel {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .panel-top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .panel-heading {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .precision-group {
+      display: inline-flex;
+      align-items: center;
+      background-color: #070b14;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .precision-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      padding: 0 8px;
+    }
+
+    .precision-btn, .cat-precision-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .precision-btn.active, .cat-precision-btn.active {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      align-items: end;
+    }
+
+    .col-span-3 { grid-column: span 3; }
+    .col-span-4 { grid-column: span 4; }
+
+    @media (max-width: 1024px) {
+      .col-span-3, .col-span-4 {
+        grid-column: span 12;
+      }
+      .precision-label {
+        display: none;
+      }
+    }
+
+    .field-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 7px;
+    }
+
+    .field-label.accent {
+      color: var(--accent-sky);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .master-input, .master-select, .search-input {
+      width: 100%;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-medium);
+      border-radius: 11px;
+      color: #ffffff;
+      outline: none;
+      font-size: 16px; /* iOS otomatik yakınlaştırmayı önler */
+    }
+
+    .master-input {
+      font-family: var(--font-mono);
+      font-size: 17px;
+      font-weight: 700;
+      padding: 11px 78px 11px 14px;
+    }
+
+    .master-select {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 14px;
+      cursor: pointer;
+    }
+
+    .master-select.unit-highlight {
+      border-color: rgba(14, 165, 233, 0.55);
+      background-color: #081224;
+    }
+
+    .search-input {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      padding: 12px 36px 12px 38px;
+    }
+
+    .master-input:focus, .master-select:focus, .search-input:focus {
+      border-color: var(--accent-sky);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+
+    .reset-inline-btn {
+      position: absolute;
+      right: 8px;
+      background-color: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 4px;
+      display: none;
+    }
+
+    .clear-search-btn.visible {
+      display: flex;
+    }
+
+    .presets-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+      margin-top: 14px;
+    }
+
+    .presets-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-right: 4px;
+    }
+
+    .preset-pill {
+      background-color: #0b1120;
+      border: 1px solid var(--border-subtle);
+      color: #cbd5e1;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .tabs-bar {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tabs-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .cat-tab {
+      background-color: #0b1120;
+      color: #cbd5e1;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 7px 13px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .cat-tab.active {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-sky);
+    }
+
+    .live-hint {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-sky);
+    }
+
+    .units-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+    }
+
+    .fav-section {
+      background: linear-gradient(180deg, rgba(0, 153, 204, 0.12) 0%, rgba(19, 28, 49, 0.85) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.32);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .section-header, .cat-section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .cat-section-header {
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .section-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-bar {
+      width: 5px;
+      height: 20px;
+      border-radius: 4px;
+      background-color: var(--accent-sky);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-left: 15px;
+    }
+
+    .section-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      background-color: #0b1120;
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .section-badge.sky {
+      color: var(--accent-sky);
+      background-color: rgba(14, 165, 233, 0.14);
+      border-color: rgba(14, 165, 233, 0.3);
+    }
+
+    .fav-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .units-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 1200px) {
+      .fav-grid { grid-template-columns: repeat(3, 1fr); }
+      .units-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 820px) {
+      .fav-grid { grid-template-columns: repeat(2, 1fr); }
+      .units-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 520px) {
+      .fav-grid, .units-grid { grid-template-columns: 1fr; }
+    }
+
+    .unit-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 13px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .unit-card.active-unit {
+      border-color: var(--accent-sky);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.45), 0 6px 18px rgba(14, 165, 233, 0.14);
+    }
+
+    .unit-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .unit-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .unit-symbol-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .unit-symbol {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background-color: #1e293b;
+      color: var(--accent-sky);
+    }
+
+    .fav-star {
+      color: #fbbf24;
+      font-size: 11px;
+    }
+
+    .unit-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-top: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      border-radius: 8px;
+      padding: 6px;
+      cursor: pointer;
+    }
+
+    .unit-input {
+      width: 100%;
+      background-color: var(--bg-input);
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 8px 11px;
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      outline: none;
+    }
+
+    .fuel-filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .fuel-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      background-color: #0b1120;
+      color: #cbd5e1;
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+    }
+
+    .fuel-pill.active[data-fuel="all"] {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-sky);
+    }
+
+    .fuel-pill.active[data-fuel="electric"] {
+      background-color: rgba(14, 165, 233, 0.2);
+      color: #38bdf8;
+      border-color: #0ea5e9;
+    }
+
+    .fuel-pill.active[data-fuel="diesel"] {
+      background-color: var(--accent-amber-bg);
+      color: #fbbf24;
+      border-color: var(--accent-amber);
+    }
+
+    .selected-machine-card {
+      background: linear-gradient(145deg, #131c31 0%, #0d1526 100%);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    .selected-machine-card.diesel-theme {
+      border-color: rgba(245, 158, 11, 0.5);
+    }
+
+    .sm-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .sm-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .badge-type {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+    }
+
+    .badge-type.electric {
+      background-color: rgba(14, 165, 233, 0.16);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .badge-type.diesel {
+      background-color: var(--accent-amber-bg);
+      color: #fbbf24;
+      border: 1px solid var(--accent-amber-border);
+    }
+
+    .badge-series {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      background-color: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+    }
+
+    .sm-model-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .sm-specs-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .spec-chip {
+      background-color: #070b14;
+      border: 1px solid var(--border-subtle);
+      border-radius: 9px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: #cbd5e1;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .spec-chip span.lbl {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .spec-chip strong {
+      color: #ffffff;
+      font-family: var(--font-mono);
+    }
+
+    .pressure-table-wrap {
+      margin-top: 18px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .pressure-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    .pressure-table th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      padding: 10px 14px;
+      background-color: #070b14;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .pressure-table th:last-child { text-align: right; }
+
+    .pressure-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(35, 49, 77, 0.65);
+      font-size: 13px;
+    }
+
+    .pressure-pill {
+      display: inline-flex;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background-color: #1e293b;
+      color: #ffffff;
+      border: 1px solid #334155;
+    }
+
+    .fad-primary-val {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--accent-sky);
+    }
+
+    .diesel-theme .fad-primary-val {
+      color: #fbbf24;
+    }
+
+    .fad-unit-tag {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-left: 4px;
+    }
+
+    .fad-secondary-refs {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .row-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .machines-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 1120px) {
+      .machines-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 680px) {
+      .machines-grid { grid-template-columns: 1fr; }
+    }
+
+    .machine-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 15px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .machine-card.selected {
+      border-color: var(--accent-sky);
+      background-color: #16223b;
+    }
+
+    .machine-card.selected.diesel-card {
+      border-color: var(--accent-amber);
+    }
+
+    .mc-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .mc-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .mc-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .mc-power-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 7px;
+      background-color: #070b14;
+      color: #e2e8f0;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .mc-variants {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background-color: #070b14;
+      border: 1px solid rgba(35, 49, 77, 0.7);
+      border-radius: 10px;
+      padding: 9px 11px;
+    }
+
+    .mc-var-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .mc-var-bar {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .mc-var-val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--accent-sky);
+    }
+
+    .diesel-card .mc-var-val {
+      color: #fbbf24;
+    }
+
+    .empty-state {
+      display: none;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 44px 20px;
+      text-align: center;
+    }
+
+    .empty-state.visible {
+      display: block;
+    }
+
+    .empty-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .empty-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      background-color: #070b14;
+      padding: 16px 0;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .footer-mono {
+      font-family: var(--font-mono);
+      color: var(--accent-sky);
+      font-weight: 600;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 60;
+      background-color: #131c31;
+      border: 1px solid rgba(56, 189, 248, 0.65);
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(110px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background-color: rgba(14, 165, 233, 0.2);
+      color: var(--accent-sky);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toast-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .toast-value {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent-sky);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="top-signature-row">
+        <div class="top-offline-pill">
+          <span class="dot-green"></span>
+          <span>%100 Çevrimdışı • 72 Debi Birimi + Atlas Copco Katalog</span>
+        </div>
+        <span class="signature-badge">
+          <span class="signature-dot"></span>
+          Created by <strong>Ahmet Şahan</strong>
+        </span>
+      </div>
+
+      <div class="header-main-row">
+        <div class="brand-block">
+          <div class="brand-icon">
+            <img src="icon.png" alt="İkon" style="width: 28px; height: 28px; object-fit: contain;">
+          </div>
+          <div>
+            <div class="brand-title-wrap">
+              <h1 class="brand-title">Hacimsel Debi &amp; Kompresör Kapasite Merkezi</h1>
+            </div>
+            <p class="brand-subtitle">Endüstriyel Akışkanlar, Pnömatik Dönüşüm &amp; Atlas Copco Makine Debi Veritabanı</p>
+          </div>
+        </div>
+
+        <nav class="mode-switcher" aria-label="Ana Mod Seçimi">
+          <button type="button" class="mode-tab-btn" data-view="converterView">
+            <span>Birim Dönüştürücü (72 Birim)</span>
+          </button>
+
+          <button type="button" class="mode-tab-btn active" data-view="catalogView">
+            <span>Atlas Copco Makine Debileri</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <!-- SEKME 1: BİRİM DÖNÜŞTÜRÜCÜ -->
+      <div id="converterView" class="view-panel">
+        <section class="control-panel">
+          <div class="panel-top-bar">
+            <div class="panel-heading">
+              <span>Çift Yönlü Anlık Hacimsel Debi Dönüştürücü</span>
+              <span class="unit-count-badge">72 Birim</span>
+            </div>
+
+            <div class="panel-actions-row">
+              <div class="precision-group" role="group">
+                <span class="precision-label">Hassasiyet:</span>
+                <button type="button" class="precision-btn" data-precision="2">2 Ondalık</button>
+                <button type="button" class="precision-btn" data-precision="4">4 Ondalık</button>
+                <button type="button" class="precision-btn active" data-precision="6">6 Ondalık</button>
+                <button type="button" class="precision-btn" data-precision="exact">Tam</button>
+              </div>
+
+              <button type="button" id="exportCsvBtn" class="btn btn-emerald">
+                <span>Excel (CSV) İndir</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="control-grid">
+            <div class="col-span-4">
+              <label for="masterValue" class="field-label accent">Hızlı Dönüşüm Değeri</label>
+              <div class="input-wrapper">
+                <input type="text" id="masterValue" inputmode="decimal" value="1" autocomplete="off" placeholder="Değer girin..." class="master-input">
+                <button type="button" id="resetValueBtn" class="reset-inline-btn">Sıfırla</button>
+              </div>
+            </div>
+
+            <div class="col-span-4">
+              <label for="masterUnit" class="field-label">Kaynak Birim Seçimi</label>
+              <select id="masterUnit" class="master-select"></select>
+            </div>
+
+            <div class="col-span-4">
+              <label for="searchInput" class="field-label">Birim Ara / Filtrele (72 Birim)</label>
+              <div class="input-wrapper">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="searchInput" autocomplete="off" placeholder="Örn: cfm, galon, m3/h..." class="search-input">
+                <button type="button" id="clearSearchBtn" class="clear-search-btn">✕</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="presets-row">
+            <span class="presets-title">Hızlı FAD Ön Ayarları:</span>
+            <button type="button" class="preset-pill" data-val="50" data-unit="l_s">50 l/s</button>
+            <button type="button" class="preset-pill" data-val="100" data-unit="l_s">100 l/s</button>
+            <button type="button" class="preset-pill" data-val="178" data-unit="l_s">178 l/s (GA 55)</button>
+            <button type="button" class="preset-pill" data-val="250" data-unit="l_s">250 l/s</button>
+            <button type="button" class="preset-pill" data-val="500" data-unit="l_s">500 l/s</button>
+            <button type="button" class="preset-pill" data-val="100" data-unit="ft3_min">100 CFM</button>
+            <button type="button" class="preset-pill" data-val="10" data-unit="m3_min">10 m³/min</button>
+            <button type="button" class="preset-pill" data-val="1000" data-unit="m3_h">1.000 m³/h</button>
+          </div>
+
+          <div class="tabs-bar">
+            <div class="tabs-list" id="categoryTabs">
+              <button type="button" class="cat-tab active" data-cat="all">Tümü (72)</button>
+              <button type="button" class="cat-tab" data-cat="favorites">★ Sık Kullanılanlar (5)</button>
+              <button type="button" class="cat-tab" data-cat="Saniyede">Saniyede (14)</button>
+              <button type="button" class="cat-tab" data-cat="Dakikada">Dakikada (14)</button>
+              <button type="button" class="cat-tab" data-cat="Saatte">Saatte (14)</button>
+              <button type="button" class="cat-tab" data-cat="Günde">Günde (16)</button>
+              <button type="button" class="cat-tab" data-cat="Yılda">Yılda (14)</button>
+            </div>
+          </div>
+        </section>
+
+        <div id="unitsContainer" class="units-sections"></div>
+
+        <div id="emptyState" class="empty-state">
+          <div class="empty-title">Eşleşen birim bulunamadı</div>
+          <p class="empty-desc">Farklı bir anahtar kelime deneyin veya arama filtresini temizleyin.</p>
+          <button type="button" id="resetFilterBtn" class="btn btn-primary">Filtreyi Temizle</button>
+        </div>
+      </div>
+
+      <!-- SEKME 2: ATLAS COPCO MAKİNE DEBİLERİ -->
+      <div id="catalogView" class="view-panel active">
+        <section class="control-panel">
+          <div class="panel-top-bar">
+            <div class="fuel-filter-group" id="fuelFilterGroup">
+              <button type="button" class="fuel-pill active" data-fuel="all">
+                <span>Tüm Makineler</span>
+                <span class="unit-count-badge" id="totalMachineBadge">138</span>
+              </button>
+              <button type="button" class="fuel-pill" data-fuel="electric">
+                <span>⚡ Elektrikli Kompresörler</span>
+              </button>
+              <button type="button" class="fuel-pill" data-fuel="diesel">
+                <span>⛽ Dizel Seyyar (Portable Air)</span>
+              </button>
+            </div>
+
+            <div class="panel-actions-row">
+              <div class="precision-group" role="group">
+                <span class="precision-label">Ondalık:</span>
+                <button type="button" class="cat-precision-btn active" data-cat-prec="2">2</button>
+                <button type="button" class="cat-precision-btn" data-cat-prec="3">3</button>
+                <button type="button" class="cat-precision-btn" data-cat-prec="4">4</button>
+              </div>
+
+              <button type="button" id="exportMachinesCsvBtn" class="btn btn-emerald">
+                <span>Excel (CSV) İndir</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="control-grid">
+            <div class="col-span-3">
+              <label for="machineQuickSelect" class="field-label accent">Hızlı Makine Seçimi</label>
+              <select id="machineQuickSelect" class="master-select"></select>
+            </div>
+
+            <div class="col-span-3">
+              <label for="seriesFilterSelect" class="field-label">Seri / Tip Filtresi</label>
+              <select id="seriesFilterSelect" class="master-select">
+                <option value="all">Tüm Seriler</option>
+                <option value="G Serisi">G Serisi (Sabit Devir)</option>
+                <option value="G VSD Serisi">G VSD Serisi (Değişken Devir)</option>
+                <option value="GA Serisi">GA Serisi (Sabit Devir)</option>
+                <option value="GA+ Serisi">GA+ Serisi (Yüksek Verimli)</option>
+                <option value="GA FLX Serisi">GA FLX Serisi (Esnek Basınç)</option>
+                <option value="GA VSD / VSD+ / VSDS">GA VSD / VSD+ / VSDS (Değişken Devir)</option>
+                <option value="AQ Oil-Free VSD">AQ Oil-Free VSD (Yağsız Su Enj.)</option>
+                <option value="SF / SFe Oil-Free Scroll">SF / SFe Oil-Free Scroll (Yağsız)</option>
+                <option value="Pistonlu &amp; Booster">Pistonlu &amp; Booster (Automan / LT / LTB)</option>
+                <option value="Dizel Seyyar (8 Serisi / XAS-XAVS)">Dizel Seyyar (8 Serisi / XAS / XATS / XAHS / XAVS)</option>
+                <option value="Dizel Yüksek Basınç (DrillAir / X-Air+)">Dizel Yüksek Basınç (DrillAir / X-Air+ / XRVS)</option>
+              </select>
+            </div>
+
+            <div class="col-span-3">
+              <label for="machineTargetUnit" class="field-label accent">Debi Gösterim Birimi</label>
+              <select id="machineTargetUnit" class="master-select unit-highlight"></select>
+            </div>
+
+            <div class="col-span-3">
+              <label for="machineSearchInput" class="field-label">Model / Güç / Basınç Ara</label>
+              <div class="input-wrapper">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="machineSearchInput" autocomplete="off" placeholder="Örn: ga 55, xas 88..." class="search-input">
+                <button type="button" id="clearMachineSearchBtn" class="clear-search-btn">✕</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="selectedMachineDetail" class="selected-machine-card"></section>
+
+        <div class="section-header" style="margin-bottom: -8px;">
+          <div class="section-title-group">
+            <span class="section-bar"></span>
+            <h2 class="section-title">Atlas Copco Makine Kataloğu</h2>
+          </div>
+          <span class="section-badge sky" id="filteredMachineCountBadge">Listeleniyor</span>
+        </div>
+
+        <div id="machinesGrid" class="machines-grid"></div>
+
+        <div id="machineEmptyState" class="empty-state">
+          <div class="empty-title">Aramanızla eşleşen makine bulunamadı</div>
+          <p class="empty-desc">Farklı bir model adı yazın veya filtreleri sıfırlayın.</p>
+          <button type="button" id="resetMachineFiltersBtn" class="btn btn-primary">Tüm Makineleri Göster</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>Hacimsel Debi Dönüştürücü &amp; Atlas Copco Makine Kataloğu • Çevrimdışı Mühendislik Aracı</div>
+      <div>Referans: <span class="footer-mono">ISO 1217 Ed.4 FAD (1 l/s)</span></div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast">
+    <div class="toast-icon">✓</div>
+    <div>
+      <div id="toastTitle" class="toast-title">Kopyalandı</div>
+      <div id="toastValue" class="toast-value"></div>
+    </div>
+  </div>
+
+  <script>
+    // Offline Service Worker Kaydı
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    (function () {
+      'use strict';
+
+      const UNITS = [
+        { id: 'km3_s', category: 'Saniyede', name: 'Kilometre küp bölü saniye', symbol: 'km³/s', factor: 1e-12, keywords: 'kilometre kup saniye' },
+        { id: 'm3_s', category: 'Saniyede', name: 'Metre küp bölü saniye', symbol: 'm³/s', factor: 0.001, keywords: 'metre kup saniye m3/s' },
+        { id: 'dm3_s', category: 'Saniyede', name: 'Desimetre küp bölü saniye', symbol: 'dm³/s', factor: 1, keywords: 'desimetre kup saniye dm3/s' },
+        { id: 'cm3_s', category: 'Saniyede', name: 'Santimetre küp bölü saniye', symbol: 'cm³/s', factor: 1000, keywords: 'santimetre kup saniye cc/s cm3/s' },
+        { id: 'mm3_s', category: 'Saniyede', name: 'Milimetre küp bölü saniye', symbol: 'mm³/s', factor: 1000000, keywords: 'milimetre kup saniye mm3/s' },
+        { id: 'in3_s', category: 'Saniyede', name: 'İnç küp bölü saniye', symbol: 'in³/s', factor: 61.0237440947323, keywords: 'inc kup saniye cubic inch' },
+        { id: 'ft3_s', category: 'Saniyede', name: 'Foot küp bölü saniye', symbol: 'ft³/s', factor: 0.0353146667214886, keywords: 'foot kup saniye cfs cubic feet' },
+        { id: 'gal_us_s', category: 'Saniyede', name: 'Galon bölü saniye (ABD sıvı)', symbol: 'gal/s (US)', factor: 0.264172052358148, keywords: 'galon saniye abd us liquid' },
+        { id: 'gal_uk_s', category: 'Saniyede', name: 'Galon bölü saniye (İngiliz)', symbol: 'gal/s (UK)', factor: 0.219969248299088, keywords: 'galon saniye ingiliz imperial uk' },
+        { id: 'l_s', category: 'Saniyede', name: 'Litre bölü saniye', symbol: 'l/s', factor: 1, favorite: true, keywords: 'litre saniye l/s lt/s' },
+        { id: 'mi3_s', category: 'Saniyede', name: 'Mil küp bölü saniye', symbol: 'mi³/s', factor: 2.39912758578927e-13, keywords: 'mil kup saniye cubic mile' },
+        { id: 'acft_s', category: 'Saniyede', name: 'Acre-foot bölü saniye', symbol: 'ac·ft/s', factor: 8.10713193789913e-7, keywords: 'acre foot saniye' },
+        { id: 'bu_us_s', category: 'Saniyede', name: 'Bushel bölü saniye (ABD)', symbol: 'bu/s (US)', factor: 0.0283775932584017, keywords: 'bushel saniye abd us' },
+        { id: 'bu_uk_s', category: 'Saniyede', name: 'Bushel bölü saniye (İngiliz)', symbol: 'bu/s (UK)', factor: 0.027496156037386, keywords: 'bushel saniye ingiliz uk' },
+
+        { id: 'km3_min', category: 'Dakikada', name: 'Kilometre küp bölü dakika', symbol: 'km³/min', factor: 6e-11, keywords: 'kilometre kup dakika' },
+        { id: 'm3_min', category: 'Dakikada', name: 'Metre küp bölü dakika', symbol: 'm³/min', factor: 0.06, favorite: true, keywords: 'metre kup dakika m3/min m3/dk' },
+        { id: 'dm3_min', category: 'Dakikada', name: 'Desimetre küp bölü dakika', symbol: 'dm³/min', factor: 60, keywords: 'desimetre kup dakika dm3/min' },
+        { id: 'cm3_min', category: 'Dakikada', name: 'Santimetre küp bölü dakika', symbol: 'cm³/min', factor: 60000, keywords: 'santimetre kup dakika cm3/min' },
+        { id: 'mm3_min', category: 'Dakikada', name: 'Milimetre küp bölü dakika', symbol: 'mm³/min', factor: 60000000, keywords: 'milimetre kup dakika mm3/min' },
+        { id: 'in3_min', category: 'Dakikada', name: 'İnç küp bölü dakika', symbol: 'in³/min', factor: 3661.42464568394, keywords: 'inc kup dakika' },
+        { id: 'ft3_min', category: 'Dakikada', name: 'Foot küp bölü dakika (CFM)', symbol: 'ft³/min (CFM)', factor: 2.11888000328932, favorite: true, keywords: 'foot kup dakika cfm pnomatik kompresor' },
+        { id: 'gal_us_min', category: 'Dakikada', name: 'Galon bölü dakika (ABD sıvı)', symbol: 'GPM (US)', factor: 15.8503231414889, keywords: 'galon dakika abd gpm us' },
+        { id: 'gal_uk_min', category: 'Dakikada', name: 'Galon bölü dakika (İngiliz)', symbol: 'GPM (UK)', factor: 13.1981548979453, keywords: 'galon dakika ingiliz gpm uk' },
+        { id: 'l_min', category: 'Dakikada', name: 'Litre bölü dakika', symbol: 'l/min', factor: 60, favorite: true, keywords: 'litre dakika l/min l/dk lt/dk' },
+        { id: 'mi3_min', category: 'Dakikada', name: 'Mil küp bölü dakika', symbol: 'mi³/min', factor: 1.43947655147356e-11, keywords: 'mil kup dakika' },
+        { id: 'acft_min', category: 'Dakikada', name: 'Acre-foot bölü dakika', symbol: 'ac·ft/min', factor: 4.86427916273948e-5, keywords: 'acre foot dakika' },
+        { id: 'bu_us_min', category: 'Dakikada', name: 'Bushel bölü dakika (ABD)', symbol: 'bu/min (US)', factor: 1.7026555955041, keywords: 'bushel dakika abd us' },
+        { id: 'bu_uk_min', category: 'Dakikada', name: 'Bushel bölü dakika (İngiliz)', symbol: 'bu/min (UK)', factor: 1.64976936224316, keywords: 'bushel dakika ingiliz uk' },
+
+        { id: 'km3_h', category: 'Saatte', name: 'Kilometreküp bölü saat', symbol: 'km³/h', factor: 3.6e-9, keywords: 'kilometre kup saat' },
+        { id: 'm3_h', category: 'Saatte', name: 'Metre küp bölü saat', symbol: 'm³/h', factor: 3.6, favorite: true, keywords: 'metre kup saat m3/h m3/saat pompa' },
+        { id: 'dm3_h', category: 'Saatte', name: 'Desimetre küp bölü saat', symbol: 'dm³/h', factor: 3600, keywords: 'desimetre kup saat dm3/h' },
+        { id: 'cm3_h', category: 'Saatte', name: 'Santimetre küp bölü saat', symbol: 'cm³/h', factor: 3600000, keywords: 'santimetre kup saat cm3/h' },
+        { id: 'mm3_h', category: 'Saatte', name: 'Milimetre küp bölü saat', symbol: 'mm³/h', factor: 3.6e9, keywords: 'milimetre kup saat mm3/h' },
+        { id: 'in3_h', category: 'Saatte', name: 'İnç küp bölü saat', symbol: 'in³/h', factor: 219685.478741036, keywords: 'inc kup saat' },
+        { id: 'ft3_h', category: 'Saatte', name: 'Foot küp bölü saat', symbol: 'ft³/h', factor: 127.132800197359, keywords: 'foot kup saat cfh' },
+        { id: 'gal_us_h', category: 'Saatte', name: 'Galon bölü saat (ABD sıvı)', symbol: 'GPH (US)', factor: 951.019388489334, keywords: 'galon saat abd gph us' },
+        { id: 'gal_uk_h', category: 'Saatte', name: 'Galon bölü saat (İngiliz)', symbol: 'GPH (UK)', factor: 791.889293876716, keywords: 'galon saat ingiliz gph uk' },
+        { id: 'l_h', category: 'Saatte', name: 'Litre bölü saat', symbol: 'l/h', factor: 3600, keywords: 'litre saat l/h lt/h' },
+        { id: 'mi3_h', category: 'Saatte', name: 'Mil küp bölü saat', symbol: 'mi³/h', factor: 8.63685930884138e-10, keywords: 'mil kup saat' },
+        { id: 'acft_h', category: 'Saatte', name: 'Acre-foot bölü saat', symbol: 'ac·ft/h', factor: 2.91856749764369e-3, keywords: 'acre foot saat' },
+        { id: 'bu_us_h', category: 'Saatte', name: 'Bushel bölü saat (ABD)', symbol: 'bu/h (US)', factor: 102.159335730246, keywords: 'bushel saat abd us' },
+        { id: 'bu_uk_h', category: 'Saatte', name: 'Bushel bölü saat (İngiliz)', symbol: 'bu/h (UK)', factor: 98.9861617345895, keywords: 'bushel saat ingiliz uk' },
+
+        { id: 'km3_d', category: 'Günde', name: 'Kilometre küp bölü gün', symbol: 'km³/d', factor: 8.64e-8, keywords: 'kilometre kup gun' },
+        { id: 'm3_d', category: 'Günde', name: 'Metre küp bölü gün', symbol: 'm³/d', factor: 86.4, keywords: 'metre kup gun m3/d' },
+        { id: 'dm3_d', category: 'Günde', name: 'Desimetre küp bölü gün', symbol: 'dm³/d', factor: 86400, keywords: 'desimetre kup gun dm3/d' },
+        { id: 'cm3_d', category: 'Günde', name: 'Santimetre küp bölü gün', symbol: 'cm³/d', factor: 86400000, keywords: 'santimetre kup gun cm3/d' },
+        { id: 'mm3_d', category: 'Günde', name: 'Milimetre küp bölü gün', symbol: 'mm³/d', factor: 8.64e10, keywords: 'milimetre kup gun mm3/d' },
+        { id: 'in3_d', category: 'Günde', name: 'İnç küp bölü gün', symbol: 'in³/d', factor: 5272451.48978487, keywords: 'inc kup gun' },
+        { id: 'ft3_d', category: 'Günde', name: 'Foot küp bölü gün', symbol: 'ft³/d', factor: 3051.18720473661, keywords: 'foot kup gun cfd' },
+        { id: 'mgd_us', category: 'Günde', name: 'Günlük milyon galon (ABD likidi)', symbol: 'MGD (US)', factor: 0.022824465323744, keywords: 'gunluk milyon galon abd likidi mgd us' },
+        { id: 'gal_us_d', category: 'Günde', name: 'Galon bölü gün (ABD sıvı)', symbol: 'GPD (US)', factor: 22824.465323744, keywords: 'galon gun abd gpd us' },
+        { id: 'mgd_uk', category: 'Günde', name: 'Günde milyon galon (İmparatorluk)', symbol: 'MGD (UK)', factor: 0.0190053430530412, keywords: 'gunde milyon galon imparatorluk mgd uk' },
+        { id: 'gal_uk_d', category: 'Günde', name: 'Galon bölü gün (İngiliz)', symbol: 'GPD (UK)', factor: 19005.3430530412, keywords: 'galon gun ingiliz gpd uk' },
+        { id: 'l_d', category: 'Günde', name: 'Litre bölü gün', symbol: 'l/d', factor: 86400, keywords: 'litre gun l/d' },
+        { id: 'mi3_d', category: 'Günde', name: 'Mil küp bölü gün', symbol: 'mi³/d', factor: 2.07284623412193e-8, keywords: 'mil kup gun' },
+        { id: 'acft_d', category: 'Günde', name: 'Acre-foot bölü gün', symbol: 'ac·ft/d', factor: 0.0700456199434485, keywords: 'acre foot gun' },
+        { id: 'bu_us_d', category: 'Günde', name: 'Bushel bölü gün (ABD)', symbol: 'bu/d (US)', factor: 2451.82405752591, keywords: 'bushel gun abd us' },
+        { id: 'bu_uk_d', category: 'Günde', name: 'Bushel bölü gün (İngiliz)', symbol: 'bu/d (UK)', factor: 2375.66788163015, keywords: 'bushel gun ingiliz uk' },
+
+        { id: 'km3_y', category: 'Yılda', name: 'Kilometre küp bölü yıl', symbol: 'km³/y', factor: 3.1536e-5, keywords: 'kilometre kup yil' },
+        { id: 'm3_y', category: 'Yılda', name: 'Metre küp bölü yıl', symbol: 'm³/y', factor: 31536, keywords: 'metre kup yil m3/y' },
+        { id: 'dm3_y', category: 'Yılda', name: 'Desimetre küp bölü yıl', symbol: 'dm³/y', factor: 31536000, keywords: 'desimetre kup yil dm3/y' },
+        { id: 'cm3_y', category: 'Yılda', name: 'Santimetre küp bölü yıl', symbol: 'cm³/y', factor: 3.1536e10, keywords: 'santimetre kup yil cm3/y' },
+        { id: 'mm3_y', category: 'Yılda', name: 'Milimetre küp bölü yıl', symbol: 'mm³/y', factor: 3.1536e13, keywords: 'milimetre kup yil mm3/y' },
+        { id: 'in3_y', category: 'Yılda', name: 'İnç küp bölü yıl', symbol: 'in³/y', factor: 1.92444479377148e9, keywords: 'inc kup yil' },
+        { id: 'ft3_y', category: 'Yılda', name: 'Foot küp bölü yıl', symbol: 'ft³/y', factor: 1113683.32972886, keywords: 'foot kup yil' },
+        { id: 'gal_us_y', category: 'Yılda', name: 'Galon bölü yıl (ABD sıvı)', symbol: 'GPY (US)', factor: 8330929.84316657, keywords: 'galon yil abd gpy us' },
+        { id: 'gal_uk_y', category: 'Yılda', name: 'Galon bölü yıl (İngiliz)', symbol: 'GPY (UK)', factor: 6936950.20736003, keywords: 'galon yil ingiliz gpy uk' },
+        { id: 'l_y', category: 'Yılda', name: 'Litre bölü yıl', symbol: 'l/y', factor: 31536000, keywords: 'litre yil l/y' },
+        { id: 'mi3_y', category: 'Yılda', name: 'Mil küp bölü yıl', symbol: 'mi³/y', factor: 7.56588875454505e-6, keywords: 'mil kup yil' },
+        { id: 'acft_y', category: 'Yılda', name: 'Acre-foot bölü yıl', symbol: 'ac·ft/y', factor: 25.5666512793587, keywords: 'acre foot yil' },
+        { id: 'bu_us_y', category: 'Yılda', name: 'Bushel bölü yıl (ABD)', symbol: 'bu/y (US)', factor: 894915.780996956, keywords: 'bushel yil abd us' },
+        { id: 'bu_uk_y', category: 'Yılda', name: 'Bushel bölü yıl (İngiliz)', symbol: 'bu/y (UK)', factor: 867118.776795004, keywords: 'bushel yil ingiliz uk' }
+      ];
+
+      const UNIT_MAP = {};
+      for (let i = 0; i < UNITS.length; i++) UNIT_MAP[UNITS[i].id] = UNITS[i];
+
+      const MACHINES = [
+        { id: 'g_2', model: 'G 2', type: 'electric', series: 'G Serisi', power: '2.2 kW (3 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '61 dB(A)', variants: [{ pressure: '8 bar', lps: 5.7 }, { pressure: '10 bar', lps: 4.7 }] },
+        { id: 'g_3', model: 'G 3', type: 'electric', series: 'G Serisi', power: '3 kW (4 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '61 dB(A)', variants: [{ pressure: '8 bar', lps: 7.7 }, { pressure: '10 bar', lps: 6.0 }] },
+        { id: 'g_4', model: 'G 4', type: 'electric', series: 'G Serisi', power: '4 kW (5.5 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '62 dB(A)', variants: [{ pressure: '8 bar', lps: 9.6 }, { pressure: '10 bar', lps: 8.4 }] },
+        { id: 'g_5', model: 'G 5', type: 'electric', series: 'G Serisi', power: '5.5 kW (7.5 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '65 dB(A)', variants: [{ pressure: '8 bar', lps: 14.3 }, { pressure: '10 bar', lps: 12.6 }] },
+        { id: 'g_7', model: 'G 7', type: 'electric', series: 'G Serisi', power: '7.5 kW (10 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '67 dB(A)', variants: [{ pressure: '8 bar', lps: 17.1 }, { pressure: '10 bar', lps: 16.0 }] },
+        { id: 'g_7l', model: 'G 7L', type: 'electric', series: 'G Serisi', power: '7.5 kW (10 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '65 dB(A)', variants: [{ pressure: '7.5 bar', lps: 20.7 }, { pressure: '10 bar', lps: 18.0 }, { pressure: '13 bar', lps: 13.8 }] },
+        { id: 'g_11', model: 'G 11', type: 'electric', series: 'G Serisi', power: '11 kW (15 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '67 dB(A)', variants: [{ pressure: '7.5 bar', lps: 29.0 }, { pressure: '10 bar', lps: 24.0 }, { pressure: '13 bar', lps: 19.0 }] },
+        { id: 'g_15', model: 'G 15', type: 'electric', series: 'G Serisi', power: '15 kW (20 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '67 dB(A)', variants: [{ pressure: '7.5 bar', lps: 32.0 }, { pressure: '10 bar', lps: 29.0 }, { pressure: '13 bar', lps: 23.0 }] },
+        { id: 'g_15l', model: 'G 15L', type: 'electric', series: 'G Serisi', power: '15 kW (20 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '67 dB(A)', variants: [{ pressure: '7.5 bar', lps: 42.5 }, { pressure: '10 bar', lps: 38.5 }, { pressure: '13 bar', lps: 31.2 }] },
+        { id: 'g_18', model: 'G 18', type: 'electric', series: 'G Serisi', power: '18.5 kW (25 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '69 dB(A)', variants: [{ pressure: '7.5 bar', lps: 52.1 }, { pressure: '10 bar', lps: 45.4 }, { pressure: '13 bar', lps: 38.5 }] },
+        { id: 'g_22', model: 'G 22', type: 'electric', series: 'G Serisi', power: '22 kW (30 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Nano', noise: '70 dB(A)', variants: [{ pressure: '7.5 bar', lps: 62.0 }, { pressure: '10 bar', lps: 54.1 }, { pressure: '13 bar', lps: 46.4 }] },
+
+        { id: 'g_2_vsd', model: 'G 2 VSD', type: 'electric', series: 'G VSD Serisi', power: '2.2 kW (3 HP)', drive: 'Kayış Tahrik VSD', controller: 'Nano', noise: '59 dB(A)', variants: [{ pressure: '8 bar', minLps: 2.3, lps: 6.0 }, { pressure: '10 bar', minLps: 2.2, lps: 4.9 }] },
+        { id: 'g_3_vsd', model: 'G 3 VSD', type: 'electric', series: 'G VSD Serisi', power: '3 kW (4 HP)', drive: 'Kayış Tahrik VSD', controller: 'Nano', noise: '59 dB(A)', variants: [{ pressure: '8 bar', minLps: 2.5, lps: 7.7 }, { pressure: '10 bar', minLps: 2.3, lps: 6.0 }] },
+        { id: 'g_4_vsd', model: 'G 4 VSD', type: 'electric', series: 'G VSD Serisi', power: '4 kW (5.5 HP)', drive: 'Kayış Tahrik VSD', controller: 'Nano', noise: '60 dB(A)', variants: [{ pressure: '8 bar', minLps: 3.9, lps: 9.7 }, { pressure: '10 bar', minLps: 4.5, lps: 8.4 }] },
+        { id: 'g_5_vsd', model: 'G 5 VSD', type: 'electric', series: 'G VSD Serisi', power: '5.5 kW (7.5 HP)', drive: 'Kayış Tahrik VSD', controller: 'Nano', noise: '63 dB(A)', variants: [{ pressure: '8 bar', minLps: 5.7, lps: 14.9 }, { pressure: '10 bar', minLps: 5.6, lps: 12.6 }] },
+        { id: 'g_7_vsd', model: 'G 7 VSD', type: 'electric', series: 'G VSD Serisi', power: '7.5 kW (10 HP)', drive: 'Kayış Tahrik VSD', controller: 'Nano', noise: '63 dB(A)', variants: [{ pressure: '8 bar', minLps: 7.1, lps: 17.3 }, { pressure: '10 bar', minLps: 7.0, lps: 16.1 }] },
+
+        { id: 'ga_5', model: 'GA 5', type: 'electric', series: 'GA Serisi', power: '5.5 kW (7.5 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Elektronikon Swipe', noise: '63 dB(A)', variants: [{ pressure: '7.5 bar', lps: 14.9 }, { pressure: '8.5 bar', lps: 13.7 }, { pressure: '10 bar', lps: 12.5 }, { pressure: '13 bar', lps: 9.3 }] },
+        { id: 'ga_7', model: 'GA 7', type: 'electric', series: 'GA Serisi', power: '7.5 kW (10 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Elektronikon Swipe', noise: '64 dB(A)', variants: [{ pressure: '7.5 bar', lps: 21.4 }, { pressure: '8.5 bar', lps: 20.3 }, { pressure: '10 bar', lps: 18.8 }, { pressure: '13 bar', lps: 14.6 }] },
+        { id: 'ga_11', model: 'GA 11', type: 'electric', series: 'GA Serisi', power: '11 kW (15 HP)', drive: 'Kayış Tahrik (Belt)', controller: 'Elektronikon Swipe', noise: '65 dB(A)', variants: [{ pressure: '7.5 bar', lps: 30.1 }, { pressure: '8.5 bar', lps: 28.3 }, { pressure: '10 bar', lps: 25.6 }, { pressure: '13 bar', lps: 21.7 }] },
+        { id: 'ga_15', model: 'GA 15', type: 'electric', series: 'GA Serisi', power: '15 kW (20 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Swipe', noise: '65 dB(A)', variants: [{ pressure: '7.5 bar', lps: 46.9 }, { pressure: '8.5 bar', lps: 43.5 }, { pressure: '10 bar', lps: 39.3 }, { pressure: '13 bar', lps: 33.3 }] },
+        { id: 'ga_18', model: 'GA 18', type: 'electric', series: 'GA Serisi', power: '18.5 kW (25 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Swipe', noise: '67 dB(A)', variants: [{ pressure: '7.5 bar', lps: 59.6 }, { pressure: '8.5 bar', lps: 57.0 }, { pressure: '10 bar', lps: 49.5 }, { pressure: '13 bar', lps: 40.0 }] },
+        { id: 'ga_22', model: 'GA 22', type: 'electric', series: 'GA Serisi', power: '22 kW (30 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Swipe', noise: '68 dB(A)', variants: [{ pressure: '7.5 bar', lps: 65.6 }, { pressure: '8.5 bar', lps: 63.3 }, { pressure: '10 bar', lps: 55.3 }, { pressure: '13 bar', lps: 49.3 }] },
+        { id: 'ga_26', model: 'GA 26', type: 'electric', series: 'GA Serisi', power: '26 kW (35 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Swipe', noise: '69 dB(A)', variants: [{ pressure: '7.5 bar', lps: 72.5 }, { pressure: '8.5 bar', lps: 66.6 }, { pressure: '10 bar', lps: 64.3 }, { pressure: '13 bar', lps: 56.6 }] },
+        { id: 'ga_30', model: 'GA 30', type: 'electric', series: 'GA Serisi', power: '30 kW (40 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Swipe', noise: '70 dB(A)', variants: [{ pressure: '7.5 bar', lps: 95.4 }, { pressure: '8.5 bar', lps: 91.5 }, { pressure: '10 bar', lps: 84.9 }, { pressure: '13 bar', lps: 74.2 }] },
+        { id: 'ga_37', model: 'GA 37', type: 'electric', series: 'GA Serisi', power: '37 kW (50 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Swipe', noise: '69 dB(A)', variants: [{ pressure: '7.5 bar', lps: 116.0 }, { pressure: '8.5 bar', lps: 108.0 }, { pressure: '10 bar', lps: 102.0 }, { pressure: '13 bar', lps: 89.0 }] },
+        { id: 'ga_45', model: 'GA 45', type: 'electric', series: 'GA Serisi', power: '45 kW (60 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Swipe', noise: '72 dB(A)', variants: [{ pressure: '7.5 bar', lps: 137.0 }, { pressure: '8.5 bar', lps: 129.0 }, { pressure: '10 bar', lps: 119.0 }, { pressure: '13 bar', lps: 104.0 }] },
+        { id: 'ga_55', model: 'GA 55', type: 'electric', series: 'GA Serisi', power: '55 kW (75 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Touch', noise: '71 dB(A)', variants: [{ pressure: '7.5 bar', lps: 178.0 }, { pressure: '8.5 bar', lps: 170.0 }, { pressure: '10 bar', lps: 151.0 }, { pressure: '13 bar', lps: 135.0 }] },
+        { id: 'ga_75', model: 'GA 75', type: 'electric', series: 'GA Serisi', power: '75 kW (100 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Touch', noise: '73 dB(A)', variants: [{ pressure: '7.5 bar', lps: 229.0 }, { pressure: '8.5 bar', lps: 220.0 }, { pressure: '10 bar', lps: 203.0 }, { pressure: '13 bar', lps: 175.0 }] },
+        { id: 'ga_90', model: 'GA 90', type: 'electric', series: 'GA Serisi', power: '90 kW (125 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Touch', noise: '72 dB(A)', variants: [{ pressure: '7.5 bar', lps: 292.0 }, { pressure: '8.5 bar', lps: 277.0 }, { pressure: '10.5 bar', lps: 256.0 }, { pressure: '13 bar', lps: 216.0 }] },
+
+        { id: 'ga_30_plus', model: 'GA 30+', type: 'electric', series: 'GA+ Serisi', power: '30 kW (40 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Touch', noise: '66 dB(A)', variants: [{ pressure: '7.5 bar', lps: 99.2 }, { pressure: '8.5 bar', lps: 90.3 }, { pressure: '10 bar', lps: 82.6 }, { pressure: '13 bar', lps: 71.2 }] },
+        { id: 'ga_37_plus', model: 'GA 37+', type: 'electric', series: 'GA+ Serisi', power: '37 kW (50 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Touch', noise: '69 dB(A)', variants: [{ pressure: '7.5 bar', lps: 123.5 }, { pressure: '8.5 bar', lps: 116.5 }, { pressure: '10 bar', lps: 104.0 }, { pressure: '13 bar', lps: 89.5 }] },
+        { id: 'ga_45_plus', model: 'GA 45+', type: 'electric', series: 'GA+ Serisi', power: '45 kW (60 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Touch', noise: '71 dB(A)', variants: [{ pressure: '7.5 bar', lps: 149.8 }, { pressure: '8.5 bar', lps: 144.2 }, { pressure: '10 bar', lps: 131.8 }, { pressure: '13 bar', lps: 103.0 }] },
+        { id: 'ga_55_plus', model: 'GA 55+', type: 'electric', series: 'GA+ Serisi', power: '55 kW (75 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Touch', noise: '69 dB(A)', variants: [{ pressure: '7.5 bar', lps: 191.0 }, { pressure: '8.5 bar', lps: 181.0 }, { pressure: '10 bar', lps: 167.0 }, { pressure: '13 bar', lps: 139.0 }] },
+        { id: 'ga_75_plus', model: 'GA 75+', type: 'electric', series: 'GA+ Serisi', power: '75 kW (100 HP)', drive: 'Dişli Tahrik (Gearbox)', controller: 'Elektronikon Touch', noise: '71 dB(A)', variants: [{ pressure: '7.5 bar', lps: 257.0 }, { pressure: '8.5 bar', lps: 237.0 }, { pressure: '10 bar', lps: 218.0 }, { pressure: '13 bar', lps: 189.0 }] },
+
+        { id: 'ga_11_flx', model: 'GA 11 FLX', type: 'electric', series: 'GA FLX Serisi', power: '11 kW (15 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '67 dB(A)', variants: [{ pressure: '4 bar', lps: 35.7 }, { pressure: '7 bar', lps: 35.6 }, { pressure: '10 bar', lps: 31.7 }, { pressure: '13 bar', lps: 26.1 }] },
+        { id: 'ga_15_flx', model: 'GA 15 FLX', type: 'electric', series: 'GA FLX Serisi', power: '15 kW (20 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '69 dB(A)', variants: [{ pressure: '4 bar', lps: 49.7 }, { pressure: '7 bar', lps: 49.3 }, { pressure: '10 bar', lps: 42.1 }, { pressure: '13 bar', lps: 32.8 }] },
+        { id: 'ga_18_flx', model: 'GA 18 FLX', type: 'electric', series: 'GA FLX Serisi', power: '18 kW (25 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '69 dB(A)', variants: [{ pressure: '4 bar', lps: 66.8 }, { pressure: '7 bar', lps: 66.4 }, { pressure: '10 bar', lps: 58.1 }, { pressure: '13 bar', lps: 46.9 }] },
+        { id: 'ga_22_flx', model: 'GA 22 FLX', type: 'electric', series: 'GA FLX Serisi', power: '22 kW (30 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '68 dB(A)', variants: [{ pressure: '4 bar', lps: 77.1 }, { pressure: '7 bar', lps: 76.7 }, { pressure: '10 bar', lps: 68.1 }, { pressure: '13 bar', lps: 56.2 }] },
+        { id: 'ga_26_flx', model: 'GA 26 FLX', type: 'electric', series: 'GA FLX Serisi', power: '26 kW (35 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '71 dB(A)', variants: [{ pressure: '4 bar', lps: 82.4 }, { pressure: '7 bar', lps: 82.0 }, { pressure: '10 bar', lps: 81.6 }, { pressure: '13 bar', lps: 67.6 }] },
+        { id: 'ga_30_flx', model: 'GA 30 FLX', type: 'electric', series: 'GA FLX Serisi', power: '30 kW (40 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '71 dB(A)', variants: [{ pressure: '4 bar', lps: 100.5 }, { pressure: '7 bar', lps: 100.1 }, { pressure: '10 bar', lps: 89.5 }, { pressure: '13 bar', lps: 75.8 }] },
+
+        { id: 'ga_5_vsds', model: 'GA 5 VSDS', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '5.5 kW (7.5 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '62 dB(A)', variants: [{ pressure: '4 bar', minLps: 6.9, lps: 19.1 }, { pressure: '7 bar', minLps: 6.6, lps: 19.1 }, { pressure: '10 bar', minLps: 6.1, lps: 15.3 }, { pressure: '13 bar', minLps: 6.1, lps: 15.0 }] },
+        { id: 'ga_7_vsds', model: 'GA 7 VSDS', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '7.5 kW (10 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '62 dB(A)', variants: [{ pressure: '4 bar', minLps: 6.7, lps: 23.0 }, { pressure: '7 bar', minLps: 6.4, lps: 22.6 }, { pressure: '10 bar', minLps: 5.9, lps: 18.6 }, { pressure: '13 bar', minLps: 5.8, lps: 14.7 }] },
+        { id: 'ga_11_vsds', model: 'GA 11 VSDS', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '11 kW (15 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '67 dB(A)', variants: [{ pressure: '4 bar', minLps: 6.4, lps: 38.9 }, { pressure: '7 bar', minLps: 5.7, lps: 38.2 }, { pressure: '10 bar', minLps: 3.9, lps: 30.2 }, { pressure: '13 bar', minLps: 6.3, lps: 26.6 }] },
+        { id: 'ga_15_vsds', model: 'GA 15 VSDS', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '15 kW (20 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '69 dB(A)', variants: [{ pressure: '4 bar', minLps: 6.4, lps: 50.3 }, { pressure: '7 bar', minLps: 5.7, lps: 49.4 }, { pressure: '10 bar', minLps: 3.9, lps: 41.1 }, { pressure: '13 bar', minLps: 6.3, lps: 32.4 }] },
+        { id: 'ga_18_vsds', model: 'GA 18 VSDS', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '18.5 kW (25 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '69 dB(A)', variants: [{ pressure: '4 bar', minLps: 6.4, lps: 67.0 }, { pressure: '7 bar', minLps: 5.7, lps: 65.2 }, { pressure: '10 bar', minLps: 3.9, lps: 55.4 }, { pressure: '13 bar', minLps: 2.7, lps: 44.7 }] },
+        { id: 'ga_22_vsd', model: 'GA 22 VSD', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '22 kW (30 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '68 dB(A)', variants: [{ pressure: '4 bar', minLps: 13.2, lps: 75.1 }, { pressure: '7 bar', minLps: 13.1, lps: 74.7 }, { pressure: '10 bar', minLps: 12.9, lps: 63.4 }, { pressure: '13 bar', minLps: 12.7, lps: 53.6 }] },
+        { id: 'ga_22_vsds', model: 'GA 22 VSDS', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '22 kW (30 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '63-68 dB(A)', variants: [{ pressure: '4 bar', minLps: 15.9, lps: 84.5 }, { pressure: '7 bar', minLps: 16.2, lps: 83.3 }, { pressure: '10 bar', minLps: 16.2, lps: 65.9 }, { pressure: '13 bar', minLps: 15.7, lps: 56.3 }] },
+        { id: 'ga_26_vsd', model: 'GA 26 VSD', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '26 kW (35 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '71 dB(A)', variants: [{ pressure: '4 bar', minLps: 13.3, lps: 77.9 }, { pressure: '7 bar', minLps: 13.1, lps: 77.5 }, { pressure: '10 bar', minLps: 12.9, lps: 71.6 }, { pressure: '13 bar', minLps: 12.8, lps: 64.5 }] },
+        { id: 'ga_26_vsds', model: 'GA 26 VSDS', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '26 kW (35 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '66-70 dB(A)', variants: [{ pressure: '4 bar', minLps: 15.9, lps: 98.1 }, { pressure: '7 bar', minLps: 16.2, lps: 96.8 }, { pressure: '10 bar', minLps: 16.2, lps: 81.3 }, { pressure: '13 bar', minLps: 15.8, lps: 68.2 }] },
+        { id: 'ga_30_vsd', model: 'GA 30 VSD', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '30 kW (40 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '71 dB(A)', variants: [{ pressure: '4 bar', minLps: 13.3, lps: 97.8 }, { pressure: '7 bar', minLps: 13.1, lps: 97.4 }, { pressure: '10 bar', minLps: 12.9, lps: 85.6 }, { pressure: '13 bar', minLps: 12.8, lps: 71.0 }] },
+        { id: 'ga_30_vsds', model: 'GA 30 VSDS', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '30 kW (40 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '67-70 dB(A)', variants: [{ pressure: '4 bar', minLps: 15.9, lps: 110.5 }, { pressure: '7 bar', minLps: 16.2, lps: 109.2 }, { pressure: '10 bar', minLps: 16.2, lps: 88.1 }, { pressure: '13 bar', minLps: 15.8, lps: 74.2 }] },
+        { id: 'ga_37_vsd', model: 'GA 37 VSD', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '37 kW (50 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '71 dB(A)', variants: [{ pressure: '4 bar', minLps: 13.3, lps: 115.8 }, { pressure: '7 bar', minLps: 13.1, lps: 115.6 }, { pressure: '10 bar', minLps: 12.9, lps: 102.8 }, { pressure: '13 bar', minLps: 12.8, lps: 86.9 }] },
+        { id: 'ga_37_vsds', model: 'GA 37 VSDS', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '37 kW (50 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '71 dB(A)', variants: [{ pressure: '4 bar', minLps: 15.7, lps: 130.8 }, { pressure: '7 bar', minLps: 15.7, lps: 129.4 }, { pressure: '10 bar', minLps: 15.7, lps: 110.7 }, { pressure: '13 bar', minLps: 16.0, lps: 94.2 }] },
+        { id: 'ga_37l_vsd_plus', model: 'GA 37L VSD+', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '37 kW (50 HP)', drive: 'Direkt Tahrik (iPM)', controller: 'Elektronikon Touch', noise: '67 dB(A)', variants: [{ pressure: '4 bar', minLps: 26, lps: 133 }, { pressure: '7 bar', minLps: 26, lps: 132 }, { pressure: '9.5 bar', minLps: 25, lps: 116 }, { pressure: '12.5 bar', minLps: 38, lps: 99 }] },
+        { id: 'ga_45_vsd', model: 'GA 45 VSD', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '45 kW (60 HP)', drive: 'Direkt Tahrik (Direct)', controller: 'Elektronikon Touch', noise: '73 dB(A)', variants: [{ pressure: '4 bar', minLps: 25.0, lps: 148.8 }, { pressure: '7 bar', minLps: 24.9, lps: 147.2 }, { pressure: '9.5 bar', minLps: 25.0, lps: 132.6 }, { pressure: '13 bar', minLps: 24.8, lps: 118.1 }] },
+        { id: 'ga_45_vsd_plus', model: 'GA 45 VSD+', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '45 kW (60 HP)', drive: 'Direkt Tahrik (iPM)', controller: 'Elektronikon Touch', noise: '67 dB(A)', variants: [{ pressure: '4 bar', minLps: 26, lps: 159 }, { pressure: '7 bar', minLps: 26, lps: 157 }, { pressure: '9.5 bar', minLps: 25, lps: 137 }, { pressure: '12.5 bar', minLps: 38, lps: 115 }] },
+        { id: 'ga_55_vsd_plus', model: 'GA 55 VSD+', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '55 kW (75 HP)', drive: 'Direkt Tahrik (iPM)', controller: 'Elektronikon Touch', noise: '67 dB(A)', variants: [{ pressure: '4 bar', minLps: 26, lps: 189 }, { pressure: '7 bar', minLps: 26, lps: 188 }, { pressure: '9.5 bar', minLps: 26, lps: 166 }, { pressure: '12.5 bar', minLps: 40, lps: 140 }] },
+        { id: 'ga_75_vsd_plus', model: 'GA 75 VSD+', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '75 kW (100 HP)', drive: 'Direkt Tahrik (iPM)', controller: 'Elektronikon Touch', noise: '70 dB(A)', variants: [{ pressure: '4 bar', minLps: 26, lps: 226 }, { pressure: '7 bar', minLps: 27, lps: 225 }, { pressure: '9.5 bar', minLps: 27, lps: 198 }, { pressure: '12.5 bar', minLps: 41, lps: 167 }] },
+        { id: 'ga_75l_vsd_plus', model: 'GA 75L VSD+', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '75 kW (100 HP)', drive: 'Direkt Tahrik (iPM)', controller: 'Elektronikon Touch', noise: '73 dB(A)', variants: [{ pressure: '4 bar', minLps: 47, lps: 269 }, { pressure: '7 bar', minLps: 48, lps: 266 }, { pressure: '9.5 bar', minLps: 58, lps: 235 }, { pressure: '12.5 bar', minLps: 70, lps: 194 }] },
+        { id: 'ga_90_vsd_plus', model: 'GA 90 VSD+', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '90 kW (125 HP)', drive: 'Direkt Tahrik (iPM)', controller: 'Elektronikon Touch', noise: '74 dB(A)', variants: [{ pressure: '4 bar', minLps: 48.2, lps: 311.3 }, { pressure: '7 bar', minLps: 48.9, lps: 305.7 }, { pressure: '9.5 bar', minLps: 59.8, lps: 269.2 }, { pressure: '12.5 bar', minLps: 70.9, lps: 217.7 }] },
+        { id: 'ga_110_vsd_plus', model: 'GA 110 VSD+', type: 'electric', series: 'GA VSD / VSD+ / VSDS', power: '110 kW (150 HP)', drive: 'Direkt Tahrik (iPM)', controller: 'Elektronikon Touch', noise: '76 dB(A)', variants: [{ pressure: '4 bar', minLps: 47.1, lps: 347.5 }, { pressure: '7 bar', minLps: 48.7, lps: 344.8 }, { pressure: '9.5 bar', minLps: 58.7, lps: 308.6 }, { pressure: '12.5 bar', minLps: 70.7, lps: 267.9 }] },
+
+        { id: 'aq_15_vsd', model: 'AQ 15 VSD (Hava Soğutmalı)', type: 'electric', series: 'AQ Oil-Free VSD', power: '15 kW (20 HP)', drive: 'Oil-Free Su Enjeksiyonlu VSD', controller: 'Elektronikon Touch', noise: '67 dB(A)', variants: [{ pressure: '4 bar', minLps: 21.5, lps: 50.2 }, { pressure: '7 bar', minLps: 22.4, lps: 46.4 }, { pressure: '10 bar', minLps: 22.5, lps: 38.1 }, { pressure: '13 bar', minLps: 21.7, lps: 29.4 }] },
+        { id: 'aq_18_vsd', model: 'AQ 18 VSD (Hava Soğutmalı)', type: 'electric', series: 'AQ Oil-Free VSD', power: '18 kW (25 HP)', drive: 'Oil-Free Su Enjeksiyonlu VSD', controller: 'Elektronikon Touch', noise: '69 dB(A)', variants: [{ pressure: '4 bar', minLps: 21.5, lps: 62.1 }, { pressure: '7 bar', minLps: 22.4, lps: 53.6 }, { pressure: '10 bar', minLps: 22.5, lps: 44.7 }, { pressure: '13 bar', minLps: 21.7, lps: 36.5 }] },
+        { id: 'aq_22_vsd', model: 'AQ 22 VSD (Hava Soğutmalı)', type: 'electric', series: 'AQ Oil-Free VSD', power: '22 kW (30 HP)', drive: 'Oil-Free Su Enjeksiyonlu VSD', controller: 'Elektronikon Touch', noise: '70 dB(A)', variants: [{ pressure: '4 bar', minLps: 21.9, lps: 65.8 }, { pressure: '7 bar', minLps: 22.5, lps: 65.5 }, { pressure: '10 bar', minLps: 22.5, lps: 54.2 }, { pressure: '13 bar', minLps: 21.6, lps: 43.5 }] },
+        { id: 'aq_30_vsd', model: 'AQ 30 VSD (Hava Soğutmalı)', type: 'electric', series: 'AQ Oil-Free VSD', power: '30 kW (40 HP)', drive: 'Oil-Free Su Enjeksiyonlu VSD', controller: 'Elektronikon Touch', noise: '72 dB(A)', variants: [{ pressure: '4 bar', minLps: 21.9, lps: 83.4 }, { pressure: '7 bar', minLps: 22.5, lps: 82.7 }, { pressure: '10 bar', minLps: 22.5, lps: 72.2 }, { pressure: '13 bar', minLps: 21.6, lps: 61.0 }] },
+        { id: 'aq_37_vsd', model: 'AQ 37 VSD (Hava Soğutmalı)', type: 'electric', series: 'AQ Oil-Free VSD', power: '37 kW (50 HP)', drive: 'Oil-Free Su Enjeksiyonlu VSD', controller: 'Elektronikon Touch', noise: '69 dB(A)', variants: [{ pressure: '4 bar', minLps: 45.5, lps: 106.8 }, { pressure: '7 bar', minLps: 43.6, lps: 105.2 }, { pressure: '10 bar', minLps: 53.1, lps: 90.9 }, { pressure: '13 bar', minLps: 64.7, lps: 76.2 }] },
+        { id: 'aq_55_vsd', model: 'AQ 55 VSD (Hava Soğutmalı)', type: 'electric', series: 'AQ Oil-Free VSD', power: '55 kW (75 HP)', drive: 'Oil-Free Su Enjeksiyonlu VSD', controller: 'Elektronikon Touch', noise: '75 dB(A)', variants: [{ pressure: '4 bar', minLps: 45.5, lps: 148.7 }, { pressure: '7 bar', minLps: 43.6, lps: 146.5 }, { pressure: '10 bar', minLps: 53.1, lps: 128.2 }, { pressure: '13 bar', minLps: 64.7, lps: 110.7 }] },
+        { id: 'aq_37_vsd_wc', model: 'AQ 37 VSD (Su Soğutmalı)', type: 'electric', series: 'AQ Oil-Free VSD', power: '37 kW (50 HP)', drive: 'Oil-Free Water Cooled VSD', controller: 'Elektronikon Touch', noise: '67 dB(A)', variants: [{ pressure: '4 bar', minLps: 45.1, lps: 111.2 }, { pressure: '7 bar', minLps: 41.9, lps: 107.7 }, { pressure: '13 bar', minLps: 63.7, lps: 73.3 }] },
+        { id: 'aq_55_vsd_wc', model: 'AQ 55 VSD (Su Soğutmalı)', type: 'electric', series: 'AQ Oil-Free VSD', power: '55 kW (75 HP)', drive: 'Oil-Free Water Cooled VSD', controller: 'Elektronikon Touch', noise: '69 dB(A)', variants: [{ pressure: '4 bar', minLps: 45.1, lps: 157.0 }, { pressure: '7 bar', minLps: 41.9, lps: 155.0 }, { pressure: '10 bar', minLps: 51.9, lps: 139.0 }, { pressure: '13 bar', minLps: 63.7, lps: 119.4 }] },
+
+        { id: 'sf_1', model: 'SF 1 (Oil-Free Scroll)', type: 'electric', series: 'SF / SFe Oil-Free Scroll', power: '1.5 kW (2 HP)', drive: 'Oil-Free Scroll', controller: 'Elektronikon', noise: '52 dB(A)', variants: [{ pressure: '8 bar', lps: 2.9 }] },
+        { id: 'sf_2', model: 'SFe 2 / SF 2 / SF 2+', type: 'electric', series: 'SF / SFe Oil-Free Scroll', power: '2.2 kW (3 HP)', drive: 'Oil-Free Scroll', controller: 'Elektronikon', noise: '55 dB(A)', variants: [{ pressure: '8 bar', lps: 4.2 }, { pressure: '10 bar', lps: 3.4 }] },
+        { id: 'sf_4', model: 'SFe 4 / SF 4 / SF 4+', type: 'electric', series: 'SF / SFe Oil-Free Scroll', power: '3.7 kW (5 HP)', drive: 'Oil-Free Scroll', controller: 'Elektronikon', noise: '56-57 dB(A)', variants: [{ pressure: '8 bar', lps: 6.6 }, { pressure: '10 bar', lps: 5.9 }] },
+        { id: 'sf_6', model: 'SFe 6 / SF 6 / SF 6+', type: 'electric', series: 'SF / SFe Oil-Free Scroll', power: '5.5 kW (7.5 HP)', drive: 'Oil-Free Scroll', controller: 'Elektronikon', noise: '59 dB(A)', variants: [{ pressure: '8 bar', lps: 9.8 }, { pressure: '10 bar', lps: 7.6 }] },
+        { id: 'sf_8_plus', model: 'SF 8+ Multicore', type: 'electric', series: 'SF / SFe Oil-Free Scroll', power: '7.4 kW (2x3.7 kW)', drive: 'Multicore Oil-Free Scroll', controller: 'Elektronikon', noise: '63 dB(A)', variants: [{ pressure: '8 bar', lps: 13.4 }, { pressure: '10 bar', lps: 11.4 }] },
+        { id: 'sf_11_plus', model: 'SF 11+ Multicore', type: 'electric', series: 'SF / SFe Oil-Free Scroll', power: '11 kW (2x5.5 kW)', drive: 'Multicore Oil-Free Scroll', controller: 'Elektronikon', noise: '63 dB(A)', variants: [{ pressure: '8 bar', lps: 20.3 }, { pressure: '10 bar', lps: 15.0 }] },
+        { id: 'sf_15_plus', model: 'SF 15+ Multicore', type: 'electric', series: 'SF / SFe Oil-Free Scroll', power: '14.8 kW (4x3.7 kW)', drive: 'Multicore Oil-Free Scroll', controller: 'Elektronikon', noise: '63 dB(A)', variants: [{ pressure: '8 bar', lps: 26.4 }, { pressure: '10 bar', lps: 23.0 }] },
+        { id: 'sf_17_plus', model: 'SF 17+ Multicore', type: 'electric', series: 'SF / SFe Oil-Free Scroll', power: '16.5 kW (3x5.5 kW)', drive: 'Multicore Oil-Free Scroll', controller: 'Elektronikon', noise: '64 dB(A)', variants: [{ pressure: '8 bar', lps: 31.0 }, { pressure: '10 bar', lps: 23.7 }] },
+        { id: 'sf_22_plus', model: 'SF 22+ Multicore', type: 'electric', series: 'SF / SFe Oil-Free Scroll', power: '22 kW (4x5.5 kW)', drive: 'Multicore Oil-Free Scroll', controller: 'Elektronikon', noise: '65 dB(A)', variants: [{ pressure: '8 bar', lps: 40.8 }, { pressure: '10 bar', lps: 30.0 }] },
+
+        { id: 'ab_21', model: 'Automan AB 21', type: 'electric', series: 'Pistonlu & Booster', power: '1.49 kW (2 HP)', drive: 'Kayışlı Pistonlu (10 bar)', controller: 'DOL', noise: 'Standart', variants: [{ pressure: '7 bar', lps: 4.3 }] },
+        { id: 'ab_31', model: 'Automan AB 31', type: 'electric', series: 'Pistonlu & Booster', power: '2.24 kW (3 HP)', drive: 'Kayışlı Pistonlu (10 bar)', controller: 'DOL', noise: 'Standart', variants: [{ pressure: '7 bar', lps: 6.6 }] },
+        { id: 'ab_40', model: 'Automan AB 40', type: 'electric', series: 'Pistonlu & Booster', power: '2.98 kW (4 HP)', drive: 'Kayışlı Pistonlu (11 bar)', controller: 'DOL', noise: 'Standart', variants: [{ pressure: '7 bar', lps: 9.2 }] },
+        { id: 'ab_55', model: 'Automan AB 55', type: 'electric', series: 'Pistonlu & Booster', power: '4.10 kW (5.5 HP)', drive: 'Kayışlı Pistonlu (11 bar)', controller: 'DOL / YD', noise: 'Standart', variants: [{ pressure: '7 bar', lps: 10.9 }] },
+        { id: 'ab_75', model: 'Automan AB 75', type: 'electric', series: 'Pistonlu & Booster', power: '5.59 kW (7.5 HP)', drive: 'Kayışlı Pistonlu (11 bar)', controller: 'DOL', noise: 'Standart', variants: [{ pressure: '7 bar', lps: 13.9 }] },
+        { id: 'ab_100', model: 'Automan AB 100', type: 'electric', series: 'Pistonlu & Booster', power: '7.46 kW (10 HP)', drive: 'Kayışlı Pistonlu (11 bar)', controller: 'DOL / YD', noise: 'Standart', variants: [{ pressure: '7 bar', lps: 20.6 }] },
+        { id: 'ab_150', model: 'Automan AB 150', type: 'electric', series: 'Pistonlu & Booster', power: '11.19 kW (15 HP)', drive: 'Kayışlı Pistonlu (11 bar)', controller: 'DOL', noise: 'Standart', variants: [{ pressure: '7 bar', lps: 25.2 }] },
+        { id: 'lt_2_10', model: 'LT 2-10', type: 'electric', series: 'Pistonlu & Booster', power: '1.5 kW (2 HP)', drive: 'Yağlı Pistonlu', controller: 'DOL', noise: '78 dB(A)', variants: [{ pressure: '10 bar', lps: 3.4 }] },
+        { id: 'lt_3_10', model: 'LT 3-10', type: 'electric', series: 'Pistonlu & Booster', power: '2.2 kW (3 HP)', drive: 'Yağlı Pistonlu', controller: 'DOL', noise: '79 dB(A)', variants: [{ pressure: '10 bar', lps: 4.4 }] },
+        { id: 'lt_4_10', model: 'LT 4-10', type: 'electric', series: 'Pistonlu & Booster', power: '3 kW (4 HP)', drive: 'Yağlı Pistonlu', controller: 'DOL', noise: '79 dB(A)', variants: [{ pressure: '10 bar', lps: 5.9 }] },
+        { id: 'lt_5_10', model: 'LT 5-10', type: 'electric', series: 'Pistonlu & Booster', power: '4 kW (5 HP)', drive: 'Yağlı Pistonlu', controller: 'DOL / YD', noise: '79 dB(A)', variants: [{ pressure: '10 bar', lps: 8.4 }] },
+        { id: 'lt_7_10', model: 'LT 7-10', type: 'electric', series: 'Pistonlu & Booster', power: '5.5 kW (7 HP)', drive: 'Yağlı Pistonlu', controller: 'DOL / YD', noise: '80 dB(A)', variants: [{ pressure: '10 bar', lps: 11.7 }] },
+        { id: 'lt_10_10', model: 'LT 10-10', type: 'electric', series: 'Pistonlu & Booster', power: '7.5 kW (10 HP)', drive: 'Yağlı Pistonlu', controller: 'Y/D', noise: '81 dB(A)', variants: [{ pressure: '10 bar', lps: 15.7 }] },
+        { id: 'lts_15_10', model: 'LTs 15-10', type: 'electric', series: 'Pistonlu & Booster', power: '11 kW (15 HP)', drive: 'Ses İzoleli Pistonlu', controller: 'Y/D', noise: '74 dB(A)', variants: [{ pressure: '10 bar', lps: 23.4 }] },
+        { id: 'lts_20_10', model: 'LTs 20-10', type: 'electric', series: 'Pistonlu & Booster', power: '15 kW (20 HP)', drive: 'Ses İzoleli Pistonlu', controller: 'Y/D', noise: '76 dB(A)', variants: [{ pressure: '10 bar', lps: 31.4 }] },
+        { id: 'lt_15_hp', model: 'LT 15 (15 / 20 / 30 bar)', type: 'electric', series: 'Pistonlu & Booster', power: '11 kW (15 HP)', drive: 'Orta/Yüksek Basınç Pistonlu', controller: 'Y/D', noise: '85-86 dB(A)', variants: [{ pressure: '15 bar', lps: 15.7 }, { pressure: '20 bar', lps: 15.1 }, { pressure: '30 bar', lps: 9.3 }] },
+        { id: 'lt_20_hp', model: 'LT 20 (15 / 20 / 30 bar)', type: 'electric', series: 'Pistonlu & Booster', power: '15 kW (20 HP)', drive: 'Orta/Yüksek Basınç Pistonlu', controller: 'Y/D', noise: '86 dB(A)', variants: [{ pressure: '15 bar', lps: 18.8 }, { pressure: '20 bar', lps: 18.0 }, { pressure: '30 bar', lps: 17.0 }] },
+        { id: 'lt_20_40', model: 'LT 20-40 (40 bar)', type: 'electric', series: 'Pistonlu & Booster', power: '15 kW (20 HP)', drive: 'Yüksek Basınç Pistonlu', controller: 'DOL', noise: '91 dB(A)', variants: [{ pressure: '40 bar', lps: 16.1 }] },
+        { id: 'lt_25_40', model: 'LT 25-40 (40 bar)', type: 'electric', series: 'Pistonlu & Booster', power: '18.5 kW (25 HP)', drive: 'Yüksek Basınç Pistonlu', controller: 'DOL', noise: '91 dB(A)', variants: [{ pressure: '40 bar', lps: 19.4 }] },
+        { id: 'lt_30_40', model: 'LT 30-40 (40 bar)', type: 'electric', series: 'Pistonlu & Booster', power: '22 kW (30 HP)', drive: 'Yüksek Basınç Pistonlu', controller: 'DOL', noise: '91 dB(A)', variants: [{ pressure: '40 bar', lps: 27.2 }] },
+        { id: 'lt_40_40', model: 'LT 40-40 (40 bar)', type: 'electric', series: 'Pistonlu & Booster', power: '30 kW (40 HP)', drive: 'Yüksek Basınç Pistonlu', controller: 'DOL', noise: '91 dB(A)', variants: [{ pressure: '40 bar', lps: 32.8 }] },
+        { id: 'lt_50_40', model: 'LT 50-40 (40 bar)', type: 'electric', series: 'Pistonlu & Booster', power: '37 kW (50 HP)', drive: 'Yüksek Basınç Pistonlu', controller: 'DOL', noise: '95 dB(A)', variants: [{ pressure: '40 bar', lps: 40.8 }] },
+        { id: 'lt_60_40', model: 'LT 60-40 (40 bar)', type: 'electric', series: 'Pistonlu & Booster', power: '45 kW (60 HP)', drive: 'Yüksek Basınç Pistonlu', controller: 'DOL', noise: '95 dB(A)', variants: [{ pressure: '40 bar', lps: 50.0 }] },
+        { id: 'ltb_7_300', model: 'LTB 7-300 (300 bar Booster)', type: 'electric', series: 'Pistonlu & Booster', power: '5.5 kW', drive: '300 bar Hava/Azot Booster', controller: '400V/3/50', noise: '70 dB(A)', variants: [{ pressure: '300 bar (5 bar giriş)', lps: 3.3 }, { pressure: '300 bar (11 bar giriş)', lps: 7.9 }] },
+        { id: 'ltb_10_300', model: 'LTB 10-300 (300 bar Booster)', type: 'electric', series: 'Pistonlu & Booster', power: '7.5 kW', drive: '300 bar Hava/Azot Booster', controller: '400V/3/50', noise: '71 dB(A)', variants: [{ pressure: '300 bar (7 bar giriş)', lps: 7.0 }, { pressure: '300 bar (10 bar giriş)', lps: 10.8 }] },
+        { id: 'ltb_15_300', model: 'LTB 15-300 (300 bar Booster)', type: 'electric', series: 'Pistonlu & Booster', power: '11 kW', drive: '300 bar Hava/Azot Booster', controller: '400V/3/50', noise: '73 dB(A)', variants: [{ pressure: '300 bar (7 bar giriş)', lps: 8.5 }, { pressure: '300 bar (10 bar giriş)', lps: 12.5 }] },
+        { id: 'ltb_20_300', model: 'LTB 20-300 (300 bar Booster)', type: 'electric', series: 'Pistonlu & Booster', power: '15 kW', drive: '300 bar Hava/Azot Booster', controller: '400V/3/50', noise: '75 dB(A)', variants: [{ pressure: '300 bar (2 bar giriş)', lps: 7.2 }, { pressure: '300 bar (4 bar giriş)', lps: 13.8 }] },
+
+        { id: 'xas_38_kd', model: 'XAS 38 Kd', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '18.5 kW (Kubota)', drive: 'Dizel Seyyar (8 Serisi)', controller: 'HardHat / Stage V', noise: '98 LwA', variants: [{ pressure: '7 bar', lps: 33.3 }] },
+        { id: 'xas_48_kd', model: 'XAS 48 Kd', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '18.5 kW (Kubota)', drive: 'Dizel Seyyar (8 Serisi)', controller: 'HardHat / Stage V', noise: '98 LwA', variants: [{ pressure: '7 bar', lps: 41.7 }] },
+        { id: 'xahs_38_kd', model: 'XAHS 38 Kd', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '26.5 kW (Kubota)', drive: 'Dizel Seyyar (8 Serisi)', controller: 'HardHat / Stage V', noise: '98 LwA', variants: [{ pressure: '12 bar', lps: 33.3 }] },
+        { id: 'xas_58_kd', model: 'XAS 58 Kd', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '26.5 kW (Kubota)', drive: 'Dizel Seyyar (8 Serisi)', controller: 'HardHat / Stage V', noise: '98 LwA', variants: [{ pressure: '7 bar', lps: 50.0 }] },
+        { id: 'xas_68_kd', model: 'XAS 68 Kd', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '33 kW (Kubota)', drive: 'Dizel Seyyar (8 Serisi)', controller: 'HardHat / Stage V', noise: '98 LwA', variants: [{ pressure: '7 bar', lps: 60.0 }] },
+        { id: 'xats_68_kd', model: 'XAS 68-10 / XATS 68 Kd', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '33 kW (Kubota)', drive: 'Dizel Seyyar (8 Serisi)', controller: 'HardHat / Stage V', noise: '98 LwA', variants: [{ pressure: '10.3 bar', lps: 60.0 }] },
+        { id: 'xas_78_kd', model: 'XAS 78 Kd', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '36 kW (Kubota)', drive: 'Dizel Seyyar (8 Serisi)', controller: 'HardHat / Stage V', noise: '98 LwA', variants: [{ pressure: '7 bar', lps: 75.0 }] },
+        { id: 'xas_88_kd', model: 'XAS 88 Kd', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '36 kW (Kubota)', drive: 'Dizel Seyyar (8 Serisi)', controller: 'HardHat / Stage V', noise: '98 LwA', variants: [{ pressure: '7 bar', lps: 83.3 }] },
+        { id: 'xas_88_10_pace', model: 'XAS 88-10 PACE', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '36 kW (Kubota)', drive: 'Dizel Seyyar PACE', controller: 'XC2003 PACE', noise: '98 LwA', variants: [{ pressure: '7 bar', lps: 83.3 }, { pressure: '10 bar', lps: 60.0 }] },
+        { id: 'xas_98', model: 'XAS 98', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '36 kW (Kubota)', drive: 'Dizel Seyyar (8 Serisi)', controller: 'HardHat / Stage V', noise: '98 LwA', variants: [{ pressure: '7 bar', lps: 90.0 }] },
+        { id: 'xas_138', model: 'XAS 138', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '55 kW (Deutz/Kubota)', drive: 'Orta Boy Dizel Seyyar', controller: 'XC2003', noise: '99 LwA', variants: [{ pressure: '7 bar', lps: 116.7 }] },
+        { id: 'xats_138', model: 'XATS 138 PACE', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '55 kW (Deutz/Kubota)', drive: 'Orta Boy Dizel PACE', controller: 'XC2003 PACE', noise: '99 LwA', variants: [{ pressure: '7 bar', lps: 116.7 }, { pressure: '10.3 bar', lps: 100.0 }] },
+        { id: 'xas_188', model: 'XAS 188', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '85 kW (Deutz)', drive: 'Orta Boy Dizel Seyyar', controller: 'XC2003', noise: '99 LwA', variants: [{ pressure: '7 bar', lps: 185.0 }] },
+        { id: 'xavs_168', model: 'XAVS 168 PACE', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '85 kW (Deutz)', drive: 'Orta Boy Dizel PACE', controller: 'XC2003 PACE', noise: '99 LwA', variants: [{ pressure: '7 bar', lps: 185.0 }, { pressure: '10.3 bar', lps: 168.3 }, { pressure: '14 bar', lps: 141.7 }] },
+        { id: 'xahs_148', model: 'XAHS 148', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '85 kW (Deutz)', drive: 'Orta Boy Dizel Seyyar', controller: 'XC2003', noise: '99 LwA', variants: [{ pressure: '12 bar', lps: 146.7 }] },
+        { id: 'xas_185', model: 'XAS 185', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '36 kW (49 HP)', drive: 'Dizel Seyyar', controller: 'XC1004', noise: '98 LwA', variants: [{ pressure: '7 bar', lps: 87.3 }] },
+        { id: 'xats_375', model: 'XATS 375', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '115 kW (John Deere)', drive: 'Orta Boy Dizel Seyyar', controller: 'XC2003', noise: '100 LwA', variants: [{ pressure: '10.3 bar', lps: 177.0 }] },
+        { id: 'xahs_365', model: 'XAHS 365', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '160 kW', drive: 'Orta Boy Dizel Seyyar', controller: 'XC2003', noise: '100 LwA', variants: [{ pressure: '12 bar', lps: 172.3 }] },
+        { id: 'xams_407', model: 'XAMS 407', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '168 kW (Deutz)', drive: 'Orta Boy Dizel Seyyar', controller: 'XC2003', noise: '100 LwA', variants: [{ pressure: '8.6 bar', lps: 191.7 }] },
+        { id: 'xats_377', model: 'XATS 377', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '168 kW (Deutz)', drive: 'Orta Boy Dizel Seyyar', controller: 'XC2003', noise: '100 LwA', variants: [{ pressure: '10.3 bar', lps: 178.3 }] },
+        { id: 'xahs_347', model: 'XAHS 347', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '168 kW (Deutz)', drive: 'Orta Boy Dizel Seyyar', controller: 'XC2003', noise: '100 LwA', variants: [{ pressure: '12 bar', lps: 163.3 }] },
+        { id: 'xavs_307', model: 'XAVS 307', type: 'diesel', series: 'Dizel Seyyar (8 Serisi / XAS-XAVS)', power: '168 kW (Deutz)', drive: 'Orta Boy Dizel Seyyar', controller: 'XC2003', noise: '100 LwA', variants: [{ pressure: '14 bar', lps: 145.0 }] },
+
+        { id: 'xair_800_20', model: 'X-Air+ 800-20 PACE', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '231 kW (Cummins QSB6.7)', drive: 'Yüksek Basınç Dizel PACE', controller: 'Xc4004 PACE', noise: '102 LwA', variants: [{ pressure: '13 bar', lps: 365.0 }, { pressure: '20 bar', lps: 345.0 }] },
+        { id: 'xair_750_25', model: 'X-Air+ 750-25 PACE', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '231 kW (Cummins QSB6.7)', drive: 'Yüksek Basınç Dizel PACE', controller: 'Xc4004 PACE', noise: '102 LwA', variants: [{ pressure: '16 bar', lps: 331.0 }, { pressure: '25 bar', lps: 320.0 }] },
+        { id: 'drillair_h32', model: 'DrillAir H32 PACE', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '368 kW (Scania DC13)', drive: 'Sondaj Yüksek Basınç PACE', controller: 'Xc4004 PACE', noise: '104 LwA', variants: [{ pressure: '13 bar', lps: 642.0 }, { pressure: '20 bar', lps: 550.0 }] },
+        { id: 'drillair_v28', model: 'DrillAir V28 PACE', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '368 kW (Scania DC13)', drive: 'Sondaj Yüksek Basınç PACE', controller: 'Xc4004 PACE', noise: '104 LwA', variants: [{ pressure: '16 bar', lps: 549.0 }, { pressure: '25 bar', lps: 505.0 }] },
+        { id: 'drillair_x28', model: 'DrillAir X28 PACE', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '368 kW (Scania DC13)', drive: 'Sondaj Yüksek Basınç PACE', controller: 'Xc4004 PACE', noise: '104 LwA', variants: [{ pressure: '16 bar', lps: 566.0 }, { pressure: '30 bar', lps: 485.0 }] },
+        { id: 'drillair_v39', model: 'DrillAir V39 PACE', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '478 kW (Scania DC16)', drive: 'Sondaj Yüksek Basınç PACE', controller: 'Xc4004 PACE', noise: '105 LwA', variants: [{ pressure: '16 bar', lps: 732.0 }, { pressure: '25 bar', lps: 655.0 }] },
+        { id: 'drillair_y35', model: 'DrillAir Y35 PACE', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '478 kW (Scania DC16)', drive: 'Sondaj Yüksek Basınç PACE', controller: 'Xc4004 PACE', noise: '105 LwA', variants: [{ pressure: '15 bar', lps: 659.0 }, { pressure: '35 bar', lps: 580.0 }] },
+        { id: 'xair_1200_40', model: 'X-Air+ 1200-40 PACE', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '450 kW (Scania DC16)', drive: 'Ultra Yüksek Basınç PACE', controller: 'Xc4004 PACE', noise: '105 LwA', variants: [{ pressure: '15 bar', lps: 650.0 }, { pressure: '40 bar', lps: 539.0 }] },
+        { id: 'xrvs_1000_cd8', model: 'XRVS 1000 CD8', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '354 kW (475 HP Cat C13)', drive: 'Yüksek Basınç Dizel', controller: 'Xc4004', noise: '104 LwA', variants: [{ pressure: '15 bar', lps: 536.1 }, { pressure: '25 bar', lps: 501.2 }, { pressure: '35 bar', lps: 429.9 }] },
+        { id: 'xrvo_727', model: 'XRVO 727', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '522 kW (Cat C18)', drive: 'Büyük Boy Yüksek Basınç Dizel', controller: 'Xc4004', noise: '105 LwA', variants: [{ pressure: '25 bar', lps: 720.0 }] },
+        { id: 'xrxo_667', model: 'XRXO 667', type: 'diesel', series: 'Dizel Yüksek Basınç (DrillAir / X-Air+)', power: '522 kW (Cat C18)', drive: 'Büyük Boy Yüksek Basınç Dizel', controller: 'Xc4004', noise: '105 LwA', variants: [{ pressure: '30 bar', lps: 670.0 }] }
+      ];
+
+      const MACHINE_MAP = {};
+      for (let i = 0; i < MACHINES.length; i++) MACHINE_MAP[MACHINES[i].id] = MACHINES[i];
+
+      const state = {
+        activeView: 'catalogView',
+        baseLps: 1,
+        activeUnitId: 'l_s',
+        precision: '6',
+        category: 'all',
+        searchQuery: '',
+        selectedMachineId: 'ga_55',
+        machineFuelFilter: 'all',
+        machineSeriesFilter: 'all',
+        machineSearchQuery: '',
+        machineTargetUnitId: 'l_s',
+        machinePrecision: 2
+      };
+
+      const masterValueInput = document.getElementById('masterValue');
+      const masterUnitSelect = document.getElementById('masterUnit');
+      const searchInput = document.getElementById('searchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+      const unitsContainer = document.getElementById('unitsContainer');
+      const emptyState = document.getElementById('emptyState');
+
+      const machineQuickSelect = document.getElementById('machineQuickSelect');
+      const seriesFilterSelect = document.getElementById('seriesFilterSelect');
+      const machineTargetUnitSelect = document.getElementById('machineTargetUnit');
+      const machineSearchInput = document.getElementById('machineSearchInput');
+      const clearMachineSearchBtn = document.getElementById('clearMachineSearchBtn');
+      const selectedMachineDetail = document.getElementById('selectedMachineDetail');
+      const machinesGrid = document.getElementById('machinesGrid');
+      const machineEmptyState = document.getElementById('machineEmptyState');
+
+      function parseFlexibleNumber(raw) {
+        if (typeof raw === 'number') return raw;
+        if (!raw || typeof raw !== 'string') return NaN;
+        let str = raw.trim().replace(/\s+/g, '');
+        if (!str || str === '-' || str === '+' || str === '.' || str === ',') return NaN;
+
+        const hasComma = str.indexOf(',') !== -1;
+        const hasDot = str.indexOf('.') !== -1;
+
+        if (hasComma && hasDot) {
+          if (str.lastIndexOf(',') > str.lastIndexOf('.')) {
+            str = str.replace(/\./g, '').replace(',', '.');
+          } else {
+            str = str.replace(/,/g, '');
+          }
+        } else if (hasComma) {
+          const parts = str.split(',');
+          str = parts.length > 2 ? str.replace(/,/g, '') : str.replace(',', '.');
+        } else if (hasDot) {
+          const parts = str.split('.');
+          if (parts.length > 2) str = str.replace(/\./g, '');
+        }
+        const num = Number(str);
+        return Number.isFinite(num) ? num : NaN;
+      }
+
+      function formatDisplayValue(num, customPrecision) {
+        if (!Number.isFinite(num) || Number.isNaN(num) || num === 0) return '0';
+        const precMode = customPrecision !== undefined ? String(customPrecision) : state.precision;
+        const absVal = Math.abs(num);
+
+        if (precMode === 'exact') {
+          if (absVal < 1e-6 || absVal >= 1e12) return num.toExponential(8).replace('.', ',');
+          return parseFloat(num.toPrecision(12)).toLocaleString('tr-TR', { maximumFractionDigits: 12, useGrouping: true });
+        }
+
+        const decimals = parseInt(precMode, 10);
+        if ((absVal > 0 && absVal < Math.pow(10, -decimals)) || absVal >= 1e13) {
+          return num.toExponential(decimals).replace('.', ',');
+        }
+
+        return num.toLocaleString('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: decimals, useGrouping: true });
+      }
+
+      function formatEditableValue(num) {
+        if (!Number.isFinite(num) || Number.isNaN(num)) return '';
+        if (num === 0) return '0';
+        const absVal = Math.abs(num);
+        if (state.precision === 'exact') {
+          if (absVal < 1e-6 || absVal >= 1e12) return num.toExponential(8).replace('.', ',');
+          return String(parseFloat(num.toPrecision(12))).replace('.', ',');
+        }
+        const decimals = parseInt(state.precision, 10);
+        if ((absVal > 0 && absVal < Math.pow(10, -decimals)) || absVal >= 1e13) {
+          return num.toExponential(decimals).replace('.', ',');
+        }
+        return Number(num.toFixed(decimals)).toString().replace('.', ',');
+      }
+
+      let toastTimer = null;
+      function showToast(title, valueText) {
+        const toast = document.getElementById('toast');
+        document.getElementById('toastTitle').textContent = title;
+        document.getElementById('toastValue').textContent = valueText;
+        toast.classList.add('show');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+
+      function copyTextToClipboard(text, label) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => showToast(label + ' Kopyalandı', text)).catch(() => fallbackCopy(text, label));
+        } else {
+          fallbackCopy(text, label);
+        }
+      }
+
+      function fallbackCopy(text, label) {
+        const tempArea = document.createElement('textarea');
+        tempArea.value = text;
+        tempArea.style.position = 'fixed';
+        tempArea.style.left = '-9999px';
+        document.body.appendChild(tempArea);
+        tempArea.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(tempArea);
+        showToast(label + ' Kopyalandı', text);
+      }
+
+      function populateUnitDropdowns() {
+        const categories = ['Saniyede', 'Dakikada', 'Saatte', 'Günde', 'Yılda'];
+        [masterUnitSelect, machineTargetUnitSelect].forEach(sel => {
+          sel.innerHTML = '';
+          const favGroup = document.createElement('optgroup');
+          favGroup.label = '★ En Çok Kullanılan Mühendislik Birimleri';
+          ['l_s', 'm3_min', 'm3_h', 'ft3_min', 'l_min', 'l_h', 'gal_us_min'].forEach(uid => {
+            const u = UNIT_MAP[uid];
+            if (u) {
+              const opt = document.createElement('option');
+              opt.value = u.id;
+              opt.textContent = u.name + ' (' + u.symbol + ')';
+              favGroup.appendChild(opt);
+            }
+          });
+          sel.appendChild(favGroup);
+
+          categories.forEach(cat => {
+            const group = document.createElement('optgroup');
+            group.label = cat + ' (Tüm Birimler)';
+            UNITS.forEach(u => {
+              if (u.category === cat) {
+                const opt = document.createElement('option');
+                opt.value = u.id;
+                opt.textContent = u.name + ' (' + u.symbol + ')';
+                group.appendChild(opt);
+              }
+            });
+            sel.appendChild(group);
+          });
+        });
+        masterUnitSelect.value = state.activeUnitId;
+        machineTargetUnitSelect.value = state.machineTargetUnitId;
+      }
+
+      function createUnitCard(unit, isPinnedSection) {
+        const currentVal = state.baseLps * unit.factor;
+        const card = document.createElement('div');
+        card.className = 'unit-card' + (unit.id === state.activeUnitId ? ' active-unit' : '');
+        card.setAttribute('data-unit-id', unit.id);
+
+        card.innerHTML = `
+          <div class="unit-card-top">
+            <div class="unit-info">
+              <div class="unit-symbol-row">
+                <span class="unit-symbol">${unit.symbol}</span>
+                ${unit.favorite && !isPinnedSection ? '<span class="fav-star">★</span>' : ''}
+              </div>
+              <div class="unit-name" title="${unit.name}">${unit.name}</div>
+            </div>
+            <button type="button" class="copy-btn" data-unit-id="${unit.id}" title="Kopyala">📋</button>
+          </div>
+          <input type="text" inputmode="decimal" autocomplete="off" data-unit-id="${unit.id}" class="unit-input" value="${formatDisplayValue(currentVal)}">
+        `;
+        return card;
+      }
+
+      function renderUnits() {
+        unitsContainer.innerHTML = '';
+        const q = state.searchQuery.trim().toLowerCase();
+        const matchesQuery = u => !q || (u.name + ' ' + u.symbol + ' ' + u.category + ' ' + u.keywords).toLowerCase().includes(q);
+        let renderedCount = 0;
+
+        if (state.category === 'all' || state.category === 'favorites') {
+          const favList = UNITS.filter(u => u.favorite && matchesQuery(u));
+          if (favList.length > 0) {
+            renderedCount += favList.length;
+            const favSec = document.createElement('section');
+            favSec.className = 'fav-section';
+            favSec.innerHTML = `<div class="section-header"><div class="section-title-group"><span class="section-bar"></span><h2 class="section-title">Sık Kullanılanlar</h2></div><span class="section-badge sky">${favList.length} Birim</span></div>`;
+            const grid = document.createElement('div');
+            grid.className = 'fav-grid';
+            favList.forEach(u => grid.appendChild(createUnitCard(u, true)));
+            favSec.appendChild(grid);
+            unitsContainer.appendChild(favSec);
+          }
+        }
+
+        const categories = ['Saniyede', 'Dakikada', 'Saatte', 'Günde', 'Yılda'];
+        categories.forEach(cat => {
+          if (state.category !== 'all' && state.category !== cat) return;
+          const list = UNITS.filter(u => u.category === cat && matchesQuery(u));
+          if (list.length === 0) return;
+          renderedCount += list.length;
+
+          const sec = document.createElement('section');
+          sec.innerHTML = `<div class="cat-section-header"><div class="section-title-group"><span class="section-bar"></span><h3 class="section-title">${cat}</h3></div><span class="section-badge">${list.length} Birim</span></div>`;
+          const grid = document.createElement('div');
+          grid.className = 'units-grid';
+          list.forEach(u => grid.appendChild(createUnitCard(u, false)));
+          sec.appendChild(grid);
+          unitsContainer.appendChild(sec);
+        });
+
+        emptyState.classList.toggle('visible', renderedCount === 0);
+      }
+
+      function syncAllValues(sourceInput) {
+        const activeUnit = UNIT_MAP[state.activeUnitId];
+        if (sourceInput !== masterValueInput && activeUnit) {
+          masterValueInput.value = formatEditableValue(state.baseLps * activeUnit.factor);
+        }
+        if (masterUnitSelect.value !== state.activeUnitId) masterUnitSelect.value = state.activeUnitId;
+
+        document.querySelectorAll('.unit-card').forEach(card => {
+          card.classList.toggle('active-unit', card.getAttribute('data-unit-id') === state.activeUnitId);
+        });
+
+        document.querySelectorAll('.unit-input').forEach(inp => {
+          if (inp === sourceInput) return;
+          const unit = UNIT_MAP[inp.getAttribute('data-unit-id')];
+          if (unit) inp.value = formatDisplayValue(state.baseLps * unit.factor);
+        });
+      }
+
+      function populateMachineQuickSelect() {
+        machineQuickSelect.innerHTML = '';
+        const seriesOrder = [
+          'GA Serisi', 'GA+ Serisi', 'GA FLX Serisi', 'GA VSD / VSD+ / VSDS',
+          'G Serisi', 'G VSD Serisi', 'AQ Oil-Free VSD', 'SF / SFe Oil-Free Scroll',
+          'Pistonlu & Booster', 'Dizel Seyyar (8 Serisi / XAS-XAVS)', 'Dizel Yüksek Basınç (DrillAir / X-Air+)'
+        ];
+
+        seriesOrder.forEach(ser => {
+          const items = MACHINES.filter(m => m.series === ser);
+          if (!items.length) return;
+          const og = document.createElement('optgroup');
+          og.label = (items[0].type === 'diesel' ? '⛽ ' : '⚡ ') + ser;
+          items.forEach(m => {
+            const opt = document.createElement('option');
+            opt.value = m.id;
+            opt.textContent = m.model + ' — ' + m.power;
+            og.appendChild(opt);
+          });
+          machineQuickSelect.appendChild(og);
+        });
+        machineQuickSelect.value = state.selectedMachineId;
+        document.getElementById('totalMachineBadge').textContent = MACHINES.length;
+      }
+
+      function formatMachineFlow(lpsValue, unitId) {
+        const unit = UNIT_MAP[unitId] || UNIT_MAP['l_s'];
+        return formatDisplayValue(lpsValue * unit.factor, state.machinePrecision);
+      }
+
+      function renderSelectedMachineDetail() {
+        const machine = MACHINE_MAP[state.selectedMachineId] || MACHINES[0];
+        const targetUnit = UNIT_MAP[state.machineTargetUnitId] || UNIT_MAP['l_s'];
+        const isDiesel = machine.type === 'diesel';
+
+        selectedMachineDetail.className = 'selected-machine-card' + (isDiesel ? ' diesel-theme' : '');
+        const badgeClass = isDiesel ? 'diesel' : 'electric';
+        const badgeText = isDiesel ? '⛽ Dizel Seyyar' : '⚡ Elektrikli';
+
+        let rowsHtml = '';
+        machine.variants.forEach(v => {
+          const isRange = typeof v.minLps === 'number';
+          const primaryDisplay = isRange
+            ? `<span class="fad-primary-val">${formatMachineFlow(v.minLps, targetUnit.id)} – ${formatMachineFlow(v.lps, targetUnit.id)}</span><span class="fad-unit-tag">${targetUnit.symbol}</span>`
+            : `<span class="fad-primary-val">${formatMachineFlow(v.lps, targetUnit.id)}</span><span class="fad-unit-tag">${targetUnit.symbol}</span>`;
+
+          const secondaryDisplay = isRange
+            ? `Min-Max: ${formatDisplayValue(v.minLps, 1)}–${formatDisplayValue(v.lps, 1)} l/s | ${formatDisplayValue(v.minLps * 0.06, 2)}–${formatDisplayValue(v.lps * 0.06, 2)} m³/min`
+            : `${formatDisplayValue(v.lps, 1)} l/s | ${formatDisplayValue(v.lps * 0.06, 2)} m³/min | ${formatDisplayValue(v.lps * 3.6, 1)} m³/h | ${formatDisplayValue(v.lps * 2.11888, 1)} CFM`;
+
+          const copyValStr = isRange
+            ? `${formatMachineFlow(v.minLps, targetUnit.id)} - ${formatMachineFlow(v.lps, targetUnit.id)} ${targetUnit.symbol}`
+            : `${formatMachineFlow(v.lps, targetUnit.id)} ${targetUnit.symbol}`;
+
+          rowsHtml += `
+            <tr>
+              <td><span class="pressure-pill">${v.pressure}</span></td>
+              <td>${primaryDisplay}</td>
+              <td class="fad-secondary-refs">${secondaryDisplay}</td>
+              <td>
+                <div class="row-actions">
+                  <button type="button" class="btn btn-secondary copy-machine-val-btn" data-copy="${copyValStr}" data-label="${machine.model} (${v.pressure})" style="padding: 6px 10px; font-size: 11px;">Kopyala</button>
+                  <button type="button" class="btn btn-transfer transfer-to-conv-btn" data-lps="${v.lps}" data-model="${machine.model} @ ${v.pressure}">Dönüştürücüye Aktar →</button>
+                </div>
+              </td>
+            </tr>`;
+        });
+
+        selectedMachineDetail.innerHTML = `
+          <div class="sm-header">
+            <div>
+              <div class="sm-badges">
+                <span class="badge-type ${badgeClass}">${badgeText}</span>
+                <span class="badge-series">${machine.series}</span>
+              </div>
+              <h2 class="sm-model-name">Atlas Copco ${machine.model}</h2>
+              <div class="sm-specs-grid">
+                <div class="spec-chip"><span class="lbl">Güç:</span> <strong>${machine.power}</strong></div>
+                <div class="spec-chip"><span class="lbl">Tahrik:</span> <strong>${machine.drive}</strong></div>
+                <div class="spec-chip"><span class="lbl">Kontrol:</span> <strong>${machine.controller}</strong></div>
+                <div class="spec-chip"><span class="lbl">Ses:</span> <strong>${machine.noise}</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="pressure-table-wrap">
+            <table class="pressure-table">
+              <thead>
+                <tr>
+                  <th>Basınç</th>
+                  <th>Kapasite / FAD (${targetUnit.symbol})</th>
+                  <th>Eşdeğerler (ISO 1217)</th>
+                  <th>İşlemler</th>
+                </tr>
+              </thead>
+              <tbody>${rowsHtml}</tbody>
+            </table>
+          </div>`;
+      }
+
+      function renderMachinesGrid() {
+        machinesGrid.innerHTML = '';
+        const q = state.machineSearchQuery.trim().toLowerCase();
+        const targetUnit = UNIT_MAP[state.machineTargetUnitId] || UNIT_MAP['l_s'];
+
+        const filtered = MACHINES.filter(m => {
+          if (state.machineFuelFilter !== 'all' && m.type !== state.machineFuelFilter) return false;
+          if (state.machineSeriesFilter !== 'all' && m.series !== state.machineSeriesFilter) return false;
+          if (q) {
+            const pressureText = m.variants.map(v => v.pressure).join(' ');
+            const haystack = (m.model + ' ' + m.series + ' ' + m.power + ' ' + m.drive + ' ' + pressureText).toLowerCase();
+            if (!haystack.includes(q) && !haystack.replace(/\s+/g, '').includes(q.replace(/\s+/g, ''))) return false;
+          }
+          return true;
+        });
+
+        document.getElementById('filteredMachineCountBadge').textContent = filtered.length + ' Makine';
+        machineEmptyState.classList.toggle('visible', filtered.length === 0);
+
+        filtered.forEach(m => {
+          const isSelected = m.id === state.selectedMachineId;
+          const isDiesel = m.type === 'diesel';
+          const card = document.createElement('div');
+          card.className = 'machine-card' + (isSelected ? ' selected' : '') + (isDiesel ? ' diesel-card' : '');
+          card.setAttribute('data-machine-id', m.id);
+
+          let varRowsHtml = '';
+          m.variants.forEach(v => {
+            const valText = typeof v.minLps === 'number'
+              ? `${formatMachineFlow(v.minLps, targetUnit.id)}–${formatMachineFlow(v.lps, targetUnit.id)} ${targetUnit.symbol}`
+              : `${formatMachineFlow(v.lps, targetUnit.id)} ${targetUnit.symbol}`;
+            varRowsHtml += `<div class="mc-var-row"><span class="mc-var-bar">${v.pressure}</span><span class="mc-var-val">${valText}</span></div>`;
+          });
+
+          card.innerHTML = `
+            <div class="mc-top">
+              <div>
+                <div class="mc-title">${isDiesel ? '⛽ ' : '⚡ '}${m.model}</div>
+                <div class="mc-sub">${m.series}</div>
+              </div>
+              <span class="mc-power-badge">${m.power}</span>
+            </div>
+            <div class="mc-variants">${varRowsHtml}</div>`;
+          machinesGrid.appendChild(card);
+        });
+      }
+
+      function transferMachineFlowToConverter(lpsValue, label) {
+        state.baseLps = lpsValue;
+        state.activeUnitId = state.machineTargetUnitId;
+        const activeUnit = UNIT_MAP[state.activeUnitId] || UNIT_MAP['l_s'];
+        masterUnitSelect.value = state.activeUnitId;
+        masterValueInput.value = formatEditableValue(state.baseLps * activeUnit.factor);
+        syncAllValues(masterValueInput);
+        switchMainView('converterView');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast(label + ' Aktarıldı', formatDisplayValue(state.baseLps * activeUnit.factor) + ' ' + activeUnit.symbol);
+      }
+
+      function switchMainView(viewId) {
+        state.activeView = viewId;
+        document.querySelectorAll('.mode-tab-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-view') === viewId));
+        document.getElementById('converterView').classList.toggle('active', viewId === 'converterView');
+        document.getElementById('catalogView').classList.toggle('active', viewId === 'catalogView');
+      }
+
+      document.querySelectorAll('.mode-tab-btn').forEach(btn => btn.addEventListener('click', () => switchMainView(btn.getAttribute('data-view'))));
+
+      masterValueInput.addEventListener('input', () => {
+        const parsed = parseFlexibleNumber(masterValueInput.value);
+        const activeUnit = UNIT_MAP[state.activeUnitId];
+        if (!Number.isNaN(parsed) && activeUnit) {
+          state.baseLps = parsed / activeUnit.factor;
+          syncAllValues(masterValueInput);
+        } else if (masterValueInput.value.trim() === '') {
+          state.baseLps = 0;
+          syncAllValues(masterValueInput);
+        }
+      });
+
+      masterUnitSelect.addEventListener('change', () => {
+        const newUnit = UNIT_MAP[masterUnitSelect.value];
+        if (!newUnit) return;
+        const currentParsed = parseFlexibleNumber(masterValueInput.value);
+        state.activeUnitId = masterUnitSelect.value;
+        if (!Number.isNaN(currentParsed)) state.baseLps = currentParsed / newUnit.factor;
+        syncAllValues(masterValueInput);
+      });
+
+      document.getElementById('resetValueBtn').addEventListener('click', () => {
+        const activeUnit = UNIT_MAP[state.activeUnitId] || UNIT_MAP['l_s'];
+        masterValueInput.value = '1';
+        state.baseLps = 1 / activeUnit.factor;
+        syncAllValues(masterValueInput);
+      });
+
+      document.querySelectorAll('.preset-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          const val = parseFloat(pill.getAttribute('data-val'));
+          const uid = pill.getAttribute('data-unit');
+          const unit = UNIT_MAP[uid] || UNIT_MAP['l_s'];
+          state.activeUnitId = uid;
+          state.baseLps = val / unit.factor;
+          masterUnitSelect.value = uid;
+          masterValueInput.value = formatEditableValue(val);
+          syncAllValues(masterValueInput);
+        });
+      });
+
+      unitsContainer.addEventListener('input', e => {
+        if (!e.target.classList.contains('unit-input')) return;
+        const unitId = e.target.getAttribute('data-unit-id');
+        const unit = UNIT_MAP[unitId];
+        if (!unit) return;
+        state.activeUnitId = unitId;
+        const parsed = parseFlexibleNumber(e.target.value);
+        state.baseLps = !Number.isNaN(parsed) ? parsed / unit.factor : 0;
+        syncAllValues(e.target);
+      });
+
+      unitsContainer.addEventListener('click', e => {
+        const btn = e.target.closest('.copy-btn');
+        if (btn) {
+          const unit = UNIT_MAP[btn.getAttribute('data-unit-id')];
+          if (unit) copyTextToClipboard(formatDisplayValue(state.baseLps * unit.factor), unit.symbol);
+        }
+      });
+
+      document.querySelectorAll('.precision-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.precision-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.precision = btn.getAttribute('data-precision');
+          syncAllValues(null);
+        });
+      });
+
+      document.querySelectorAll('.cat-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          state.category = tab.getAttribute('data-cat');
+          renderUnits();
+        });
+      });
+
+      searchInput.addEventListener('input', () => {
+        state.searchQuery = searchInput.value;
+        clearSearchBtn.classList.toggle('visible', state.searchQuery.length > 0);
+        renderUnits();
+      });
+
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        state.searchQuery = '';
+        clearSearchBtn.classList.remove('visible');
+        renderUnits();
+      });
+
+      document.getElementById('resetFilterBtn').addEventListener('click', () => {
+        searchInput.value = '';
+        state.searchQuery = '';
+        state.category = 'all';
+        clearSearchBtn.classList.remove('visible');
+        document.querySelectorAll('.cat-tab').forEach(t => t.classList.toggle('active', t.getAttribute('data-cat') === 'all'));
+        renderUnits();
+      });
+
+      machineQuickSelect.addEventListener('change', () => {
+        state.selectedMachineId = machineQuickSelect.value;
+        renderSelectedMachineDetail();
+        renderMachinesGrid();
+      });
+
+      seriesFilterSelect.addEventListener('change', () => {
+        state.machineSeriesFilter = seriesFilterSelect.value;
+        renderMachinesGrid();
+      });
+
+      machineTargetUnitSelect.addEventListener('change', () => {
+        state.machineTargetUnitId = machineTargetUnitSelect.value;
+        renderSelectedMachineDetail();
+        renderMachinesGrid();
+      });
+
+      machineSearchInput.addEventListener('input', () => {
+        state.machineSearchQuery = machineSearchInput.value;
+        clearMachineSearchBtn.classList.toggle('visible', state.machineSearchQuery.length > 0);
+        renderMachinesGrid();
+      });
+
+      clearMachineSearchBtn.addEventListener('click', () => {
+        machineSearchInput.value = '';
+        state.machineSearchQuery = '';
+        clearMachineSearchBtn.classList.remove('visible');
+        renderMachinesGrid();
+      });
+
+      document.getElementById('resetMachineFiltersBtn').addEventListener('click', () => {
+        machineSearchInput.value = '';
+        state.machineSearchQuery = '';
+        state.machineFuelFilter = 'all';
+        state.machineSeriesFilter = 'all';
+        seriesFilterSelect.value = 'all';
+        clearMachineSearchBtn.classList.remove('visible');
+        document.querySelectorAll('.fuel-pill').forEach(p => p.classList.toggle('active', p.getAttribute('data-fuel') === 'all'));
+        renderMachinesGrid();
+      });
+
+      document.querySelectorAll('.fuel-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          document.querySelectorAll('.fuel-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          state.machineFuelFilter = pill.getAttribute('data-fuel');
+          renderMachinesGrid();
+        });
+      });
+
+      document.querySelectorAll('.cat-precision-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.cat-precision-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          state.machinePrecision = parseInt(btn.getAttribute('data-cat-prec'), 10);
+          renderSelectedMachineDetail();
+          renderMachinesGrid();
+        });
+      });
+
+      machinesGrid.addEventListener('click', e => {
+        const card = e.target.closest('.machine-card');
+        if (!card) return;
+        const mid = card.getAttribute('data-machine-id');
+        if (mid && MACHINE_MAP[mid]) {
+          state.selectedMachineId = mid;
+          machineQuickSelect.value = mid;
+          renderSelectedMachineDetail();
+          renderMachinesGrid();
+          selectedMachineDetail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+
+      selectedMachineDetail.addEventListener('click', e => {
+        const copyBtn = e.target.closest('.copy-machine-val-btn');
+        if (copyBtn) copyTextToClipboard(copyBtn.getAttribute('data-copy'), copyBtn.getAttribute('data-label'));
+        const transferBtn = e.target.closest('.transfer-to-conv-btn');
+        if (transferBtn) {
+          const lps = parseFloat(transferBtn.getAttribute('data-lps'));
+          if (!Number.isNaN(lps)) transferMachineFlowToConverter(lps, transferBtn.getAttribute('data-model'));
+        }
+      });
+
+      // CSV Export İşlemleri
+      function downloadCsv(content, filename) {
+        const blob = new Blob(['\uFEFF' + content], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      document.getElementById('exportCsvBtn').addEventListener('click', () => {
+        const activeUnit = UNIT_MAP[state.activeUnitId] || UNITS[0];
+        let csv = `Zaman Dilimi;Birim Adı;Sembol;Hesaplanan Değer\r\n`;
+        UNITS.forEach(u => {
+          csv += `${u.category};"${u.name}";"${u.symbol}";"${String(state.baseLps * u.factor).replace('.', ',')}"\r\n`;
+        });
+        downloadCsv(csv, `Hacimsel_Debi_${activeUnit.symbol.replace(/[^a-zA-Z0-9]/g, '_')}.csv`);
+      });
+
+      document.getElementById('exportMachinesCsvBtn').addEventListener('click', () => {
+        const targetUnit = UNIT_MAP[state.machineTargetUnitId] || UNIT_MAP['l_s'];
+        let csv = `Kategori;Seri;Model;Güç;Basınç;Debi (${targetUnit.symbol});Referans l/s\r\n`;
+        MACHINES.forEach(m => {
+          m.variants.forEach(v => {
+            csv += `"${m.type === 'diesel' ? 'Dizel' : 'Elektrikli'}";"${m.series}";"${m.model}";"${m.power}";"${v.pressure}";"${String(v.lps * targetUnit.factor).replace('.', ',')}";"${String(v.lps).replace('.', ',')}"\r\n`;
+          });
+        });
+        downloadCsv(csv, `Atlas_Copco_Katalog_${targetUnit.symbol.replace(/[^a-zA-Z0-9]/g, '_')}.csv`);
+      });
+
+      populateUnitDropdowns();
+      renderUnits();
+      populateMachineQuickSelect();
+      renderSelectedMachineDetail();
+      renderMachinesGrid();
+    })();
+  </script>
+</body>
+</html>

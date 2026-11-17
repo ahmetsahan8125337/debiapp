@@ -1,0 +1,9 @@
+{
+  "appId": "com.ahmetsahan.debikompresor",
+  "appName": "Debi & Kompresör",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "ios": {
+    "contentInset": "always"
+  }
+}
